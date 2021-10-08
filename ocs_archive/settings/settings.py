@@ -18,6 +18,11 @@ FILESTORE_TYPE = os.getenv('FILESTORE_TYPE', 'dummy')
 # Used for local File system storage backend as the root storage directory
 FILESYSTEM_STORAGE_ROOT_DIR = os.getenv('FILESYSTEM_STORAGE_ROOT_DIR', '')
 
+# Used to override and update mapping of file extensions to DataFile subclass class dotpath
+# The expected format is a string literal representation of a dictionary, mapping extensions
+# to Datafile subclass absolute dotpath
+FILETYPE_MAPPING_OVERRIDES = ast.literal_eval(os.getenv('FILETYPE_MAPPING_OVERRIDES', "{}"))
+
 # Files we wish to ignore
 IGNORED_CHARS = get_tuple_from_environment('IGNORED_CHARS', '-l00,tstnrs')
 
