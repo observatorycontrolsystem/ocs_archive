@@ -17,6 +17,7 @@ FILESTORE_TYPE = os.getenv('FILESTORE_TYPE', 'dummy')
 
 # Used for local File system storage backend as the root storage directory
 FILESYSTEM_STORAGE_ROOT_DIR = os.getenv('FILESYSTEM_STORAGE_ROOT_DIR', '')
+FILESYSTEM_STORAGE_BASE_URL = os.getenv('FILESYSTEM_STORAGE_BASE_URL', 'http://0.0.0.0/')
 
 # Used to override and update mapping of file extensions to DataFile subclass class dotpath
 # The expected format is a string literal representation of a dictionary, mapping extensions
