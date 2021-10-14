@@ -4,10 +4,10 @@ from ocs_archive.input.file import DataFile, FileSpecificationException
 from ocs_archive.settings import settings
 
 EXTENSION_TO_FILE_CLASS = {
-    '.fits.fz': 'ocs_archive.input.LcoFitsFile',
-    '.fits': 'ocs_archive.input.FitsFile',
-    '.tar.gz': 'ocs_archive.input.TarWithFitsFile',
-    '.pdf': 'ocs_archive.input.DataFile'
+    '.fits.fz': 'ocs_archive.input.lcofitsfile.LcoFitsFile',
+    '.fits': 'ocs_archive.input.fitsfile.FitsFile',
+    '.tar.gz': 'ocs_archive.input.tarwithfitsfile.TarWithFitsFile',
+    '.pdf': 'ocs_archive.input.file.DataFile'
 }
 
 

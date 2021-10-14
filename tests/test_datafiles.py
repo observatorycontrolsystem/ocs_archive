@@ -4,8 +4,9 @@ import os
 from datetime import timedelta
 from dateutil.parser import parse
 
-from ocs_archive.input.file import File, DataFile, EmptyFile
+from ocs_archive.input.file import File, DataFile, EmptyFile, FileSpecificationException
 from ocs_archive.input.fitsfile import FitsFile
+from ocs_archive.input.filefactory import FileFactory
 from ocs_archive.input.lcofitsfile import LcoFitsFile
 from ocs_archive.input.tarwithfitsfile import TarWithFitsFile
 from ocs_archive.settings import settings
@@ -189,6 +190,17 @@ class TestFits(unittest.TestCase):
         self.assertNotIn('FOO', header_data.get_headers().keys())
         self.assertIn('BAZ', header_data.get_headers().keys())
 
+    def test_fits_and_fpac_have_same_frame_data_generated(self):
+        data_file = FitsFile(self.file, file_metadata={}, required_headers=self.required_headers)
+        frame_data_fpac = data_file.get_header_data().get_archive_frame_data()
+
+        with open(os.path.join(FITS_PATH, 'coj1m011-kb05-20150219-0125-e90.fits'), 'rb') as fp:
+            open_file = File(fp, 'coj1m011-kb05-20150219-0125-e90.fits')
+            data_file = FitsFile(open_file, file_metadata={}, required_headers=self.required_headers)
+            frame_data = data_file.get_header_data().get_archive_frame_data()
+
+        self.assertDictEqual(frame_data, frame_data_fpac)
+
     @unittest.mock.patch('ocs_archive.settings.settings.RELATED_FRAME_KEYS', ('L1IDBIAS', 'L1IDFLAT', 'L1IDDARK', 'TARFILE', 'GUIDETAR'))
     def test_normalize_related(self):
         headers = {
@@ -333,3 +345,64 @@ class TestTarFits(unittest.TestCase):
         headers = {'PROPID': 'TestProposal', 'DATE-OBS': '2017-11-09T13:56:05.261'}
         data_file = TarWithFitsFile(self.file, file_metadata=headers, required_headers=())
         self.assertEqual('application/x-tar', data_file.get_filestore_content_type())
+
+    def test_tar_fits_pulls_out_headers(self):
+        data_file = TarWithFitsFile(self.file, file_metadata={}, required_headers=('DATE-OBS', 'PROPID'))
+        header_data = data_file.get_header_data()
+        self.assertIsNotNone(header_data.get_observation_date())
+        self.assertIsNotNone(header_data.get_proposal_id())
+
+
+class TestFileFactory(unittest.TestCase):
+    @unittest.mock.patch('ocs_archive.settings.settings.FILETYPE_MAPPING_OVERRIDES', {'.fake.fits': 'ocs_archive.input.fitsfile.FitsFile', '.superpdf': 'ocs_archive.input.file.DataFile'})
+    def test_file_factory_uses_settings_to_extend_mapping(self):
+        fake_fits_file = EmptyFile('fake_fits_file.fake.fits')
+        fake_fits_file_class = FileFactory.get_datafile_class_for_extension(fake_fits_file.extension)
+        self.assertIs(fake_fits_file_class, FitsFile)
+
+        fits_file = EmptyFile('fits_file.fits')
+        fits_file_class = FileFactory.get_datafile_class_for_extension(fits_file.extension)
+        self.assertIs(fits_file_class, FitsFile)
+
+        super_pdf_file = EmptyFile('super_pdf_file.superpdf')
+        super_pdf_class = FileFactory.get_datafile_class_for_extension(super_pdf_file.extension)
+        self.assertIs(super_pdf_class, DataFile)
+
+    @unittest.mock.patch('ocs_archive.settings.settings.FILETYPE_MAPPING_OVERRIDES', {'.fits': 'ocs_archive.input.lcofitsfile.LcoFitsFile'})
+    def test_file_factory_uses_settings_to_override_mapping(self):
+        fits_file = EmptyFile('fits_file.fits')
+        fits_file_class = FileFactory.get_datafile_class_for_extension(fits_file.extension)
+        self.assertIs(fits_file_class, LcoFitsFile)
+
+    def test_file_factory_raises_exception_for_nonexistent_extention(self):
+        fake_file = EmptyFile('fits_file.fake')
+        with self.assertRaises(FileSpecificationException) as fse:
+            fake_file_class = FileFactory.get_datafile_class_for_extension(fake_file.extension)
+        self.assertEqual('file extension .fake is not a currently supported file type', str(fse.exception))
+
+    def test_file_factory_raises_exception_for_nonexistent_extention(self):
+        fake_file = EmptyFile('fits_file.fake')
+        with self.assertRaises(FileSpecificationException) as fse:
+            fake_file_class = FileFactory.get_datafile_class_for_extension(fake_file.extension)
+        self.assertEqual('file extension .fake is not a currently supported file type', str(fse.exception))
+
+    @unittest.mock.patch('ocs_archive.settings.settings.FILETYPE_MAPPING_OVERRIDES', {'.fits': 'this.module.is.fake.fitsfile.FitsFile'})
+    def test_file_factory_raises_exception_for_nonexistent_module_override(self):
+        fits_file = EmptyFile('fits_file.fits')
+        with self.assertRaises(FileSpecificationException) as fse:
+            fits_file_class = FileFactory.get_datafile_class_for_extension(fits_file.extension)
+        self.assertEqual('module this.module.is.fake.fitsfile was not found. Please ensure the class path is correct', str(fse.exception))
+
+    @unittest.mock.patch('ocs_archive.settings.settings.FILETYPE_MAPPING_OVERRIDES', {'.fits': 'ocs_archive.input.fitsfile.FakeFitsFile'})
+    def test_file_factory_raises_exception_for_nonexistent_class_override(self):
+        fits_file = EmptyFile('fits_file.fits')
+        with self.assertRaises(FileSpecificationException) as fse:
+            fits_file_class = FileFactory.get_datafile_class_for_extension(fits_file.extension)
+        self.assertEqual('class FakeFitsFile does not exist within module ocs_archive.input.fitsfile. Please ensure the class path is correct', str(fse.exception))
+
+    @unittest.mock.patch('ocs_archive.settings.settings.FILETYPE_MAPPING_OVERRIDES', {'.fits': 'ocs_archive.input.file.File'})
+    def test_file_factory_raises_exception_for_wrong_subclass_override(self):
+        fits_file = EmptyFile('fits_file.fits')
+        with self.assertRaises(FileSpecificationException) as fse:
+            fits_file_class = FileFactory.get_datafile_class_for_extension(fits_file.extension)
+        self.assertEqual('class File must be a subclass of the ocs_archive.input.file.DataFile class', str(fse.exception))
