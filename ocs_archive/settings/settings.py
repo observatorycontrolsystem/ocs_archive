@@ -43,7 +43,7 @@ CALIBRATION_TYPES = get_tuple_from_environment('CALIBRATION_TYPES', 'BIAS,DARK,S
 PUBLIC_PROPOSALS = get_tuple_from_environment('PUBLIC_PROPOSALS', 'EPO,calib,standard,pointing')
 
 # Days until a private proposals data becomes public, measured from observation date
-DAYS_UNTIL_PUBLIC = os.getenv('DAYS_UNTIL_PUBLIC', 365)
+DAYS_UNTIL_PUBLIC = int(os.getenv('DAYS_UNTIL_PUBLIC', 365))
 
 # Proposals including these strings will be considered private data (L1PUBDATE far out)
 PRIVATE_PROPOSALS = get_tuple_from_environment('PRIVATE_PROPOSALS', 'LCOEngineering')
