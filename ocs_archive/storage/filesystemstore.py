@@ -18,9 +18,9 @@ class FileSystemStore(FileStore):
 
     def store_file(self, data_file: DataFile):
         md5 = data_file.open_file.get_md5()
-        directory = os.path.join(settings.FILESYSTEM_STORAGE_ROOT_DIR, os.path.dirname(data_file.get_filestore_path()))
+        directory = os.path.join(self.root_dir, os.path.dirname(data_file.get_filestore_path()))
         os.makedirs(directory, exist_ok=True)  # ensure that the directory exists or make it
-        with open(os.path.join(settings.FILESYSTEM_STORAGE_ROOT_DIR, data_file.get_filestore_path()), 'wb') as fp:
+        with open(os.path.join(self.root_dir, data_file.get_filestore_path()), 'wb') as fp:
             fp.write(data_file.open_file.get_from_start().read())
         return {
             'key': md5,
@@ -29,7 +29,7 @@ class FileSystemStore(FileStore):
         }
 
     def delete_file(self, path: str, version_id: str):
-        full_path = os.path.join(settings.FILESYSTEM_STORAGE_ROOT_DIR, path)
+        full_path = os.path.join(self.root_dir, path)
         if os.path.exists(full_path):
             os.remove(full_path)
 
@@ -39,10 +39,10 @@ class FileSystemStore(FileStore):
 
     @contextmanager
     def get_fileobj(self, path: str):
-        full_path = os.path.join(settings.FILESYSTEM_STORAGE_ROOT_DIR, path)
+        full_path = os.path.join(self.root_dir, path)
         fileobj = None
         try:
-            if not os.path.exists(full_path):
+            if os.path.exists(full_path):
                 fileobj = open(full_path, 'rb')
             yield fileobj
         finally:
@@ -50,5 +50,5 @@ class FileSystemStore(FileStore):
                 fileobj.close()
 
     def get_file_size(self, path: str):
-        full_path = os.path.join(settings.FILESYSTEM_STORAGE_ROOT_DIR, path)
+        full_path = os.path.join(self.root_dir, path)
         return os.path.getsize(full_path)
