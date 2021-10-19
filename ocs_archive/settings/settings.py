@@ -7,7 +7,7 @@ def get_tuple_from_environment(variable_name, default):
 
 
 # AWS Credentials and defaults
-BUCKET = os.getenv('BUCKET', 'ingestertest')
+BUCKET = os.getenv('BUCKET', 'testbucket')
 S3_SIGNATURE_VERSION = os.getenv('S3_SIGNATURE_VERSION', 's3v4')
 S3_ENDPOINT_URL = os.getenv('S3_ENDPOINT_URL', 'http://s3.us-west-2.amazonaws.com')
 S3_DAYS_TO_IA_STORAGE = int(os.getenv('S3_DAYS_TO_IA_STORAGE', 60))
