@@ -5,7 +5,6 @@ from contextlib import contextmanager
 
 from dateutil.parser import parse
 import boto3
-import requests
 from botocore.exceptions import EndpointConnectionError, ConnectionClosedError
 
 from ocs_archive.input.file import DataFile
@@ -57,8 +56,7 @@ class S3Store(FileStore):
                 ContentType=content_type,
                 StorageClass=storage_class,
             )
-        except (requests.exceptions.ConnectionError,
-                EndpointConnectionError, ConnectionClosedError) as exc:
+        except Exception as exc:
             raise FileStoreConnectionError(exc)
         s3_md5 = strip_quotes_from_etag(response['ETag'])
         key = response['VersionId']
