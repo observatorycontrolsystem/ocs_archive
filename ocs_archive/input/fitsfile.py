@@ -22,6 +22,9 @@ class FitsFile(DataFile):
         self._normalize_related_frames()
 
     def _remove_blacklist_headers(self, blacklist_headers: tuple):
+        if '' not in blacklist_headers:
+            # Always remove the empty string header since it causes issues
+            self.header_data.remove_header('')
         for header in self.blacklist_headers:
             self.header_data.remove_header(header)
 

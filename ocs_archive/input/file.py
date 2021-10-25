@@ -183,11 +183,14 @@ class DataFile:
                 and not self.header_data.headers_are_set(['NAXIS3'])
         ):
             # Find the RA and Dec coordinates of all 4 corners of the image
-            w = wcs.WCS(headers)
-            c1 = w.all_pix2world(1, 1, 1)
-            c2 = w.all_pix2world(1, headers['NAXIS2'], 1)
-            c3 = w.all_pix2world(headers['NAXIS1'], headers['NAXIS2'], 1)
-            c4 = w.all_pix2world(headers['NAXIS1'], 1, 1)
+            try:
+                w = wcs.WCS(headers)
+                c1 = w.all_pix2world(1, 1, 1)
+                c2 = w.all_pix2world(1, headers['NAXIS2'], 1)
+                c3 = w.all_pix2world(headers['NAXIS1'], headers['NAXIS2'], 1)
+                c4 = w.all_pix2world(headers['NAXIS1'], 1, 1)
+            except ValueError:
+                return None
 
         else:
             # This file doesn't have sufficient information to provide an area
