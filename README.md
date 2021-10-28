@@ -27,8 +27,8 @@ Add the `ocs_archive` package to your python environment:
 
 ### Environment Variables
 
-| Group | Variable | Description | Default |
-| ----- | -------- | ----------- | ------- |
+| Group | Variable | Description                                                                    | Default |
+| ----- | -------- | ------------------------------------------------------------------------------ | ------- |
 | FileStore | `FILESTORE_TYPE` | Type of filestorage to use. Options are `dummy`, `local`, or `s3`. | `dummy` |
 |           | `FILESYSTEM_STORAGE_ROOT_DIR` | If using `local` file storage, this is the directory on the local filesystem to use as the root of the storage directories | _empty string_ |
 |           | `FILESYSTEM_STORAGE_BASE_URL` | If using `local` file storage, this is the base URL at which those files will be hosted from | `http://0.0.0.0/` |
@@ -65,7 +65,7 @@ Add the `ocs_archive` package to your python environment:
 |                | `PROPOSAL_ID_KEY` | The key in which to find the proposal ID in the header data | `PROPID` |
 |                | `CATALOG_TARGET_FRAME_KEY` | The key in which to find the base filename of the catalog file for the target of this observation in the header data | `L1IDCAT` |
 |                | `PUBLIC_DATE_KEY` | The key in which to find the iso formatted date in which this data should become available to the public in the header data | `L1PUBDAT` |
-|                | `RELATED_FRAME_KEYS` | A comma delimited list of keys in the header data to look for related frame base filenames for this observation | "L1IDBIAS,L1IDDARK,L1IDFLAT,L1IDSHUT,L1IDMASK,L1IDFRNG,L1IDCAT,L1IDARC,L1ID1D,L1ID2D,L1IDSUM,TARFILE,ORIGNAME,ARCFILE,FLATFILE,GUIDETAR" |
+|                | `RELATED_FRAME_KEYS` | A comma delimited list of keys in the header data to look for related frame base filenames for this observation | `L1IDBIAS,L1IDDARK,L1IDFLAT,L1IDSHUT,L1IDMASK,L1IDFRNG,L1IDCAT,L1IDARC,L1ID1D,L1ID2D,L1IDSUM,TARFILE,ORIGNAME,ARCFILE,FLATFILE,GUIDETAR` |
 |                | `RADIUS_KEY` | The key in which to find FOV radius for a circular FOV, used to calculate WCS polygon if specified. Unit of arcseconds | `RADIUS` |
 |                | `RA_KEY` | The key in which to find FOV center RA for a circular FOV, used to calculate WCS polygon if specified. Unit of hour angle | `RA` |
 |                | `DEC_KEY` | The key in which to find FOV center DEC for a circular FOV, used to calculate WCS polygon if specified. Unit of decimal degrees | `DEC` |
