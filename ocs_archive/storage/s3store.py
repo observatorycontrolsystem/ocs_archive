@@ -5,7 +5,6 @@ from contextlib import contextmanager
 
 from dateutil.parser import parse
 import boto3
-import requests
 from botocore.exceptions import EndpointConnectionError, ConnectionClosedError
 
 from ocs_archive.input.file import DataFile
@@ -45,7 +44,7 @@ class S3Store(FileStore):
 
     def store_file(self, data_file: DataFile):
         storage_class = self.get_storage_class(parse(data_file.get_header_data().get_observation_date()))
-        start_time = datetime.utcnow()
+        # start_time = datetime.utcnow()
         s3 = boto3.resource('s3', endpoint_url=settings.S3_ENDPOINT_URL)
         key = data_file.get_filestore_path()
         content_disposition = 'attachment; filename={0}{1}'.format(data_file.open_file.basename, data_file.open_file.extension)
@@ -57,8 +56,7 @@ class S3Store(FileStore):
                 ContentType=content_type,
                 StorageClass=storage_class,
             )
-        except (requests.exceptions.ConnectionError,
-                EndpointConnectionError, ConnectionClosedError) as exc:
+        except Exception as exc:
             raise FileStoreConnectionError(exc)
         s3_md5 = strip_quotes_from_etag(response['ETag'])
         key = response['VersionId']
@@ -70,14 +68,14 @@ class S3Store(FileStore):
             }
         })
         # Record metric for the bytes transferred / time to upload
-        upload_time = datetime.utcnow() - start_time
-        bytes_per_second = len(data_file.open_file) / upload_time.total_seconds()
-        self.send_metric(
-            metric_name='ingester.s3_upload_bytes_per_second',
-            value=bytes_per_second,
-            asynchronous=settings.SUBMIT_METRICS_ASYNCHRONOUSLY,
-            **settings.EXTRA_METRICS_TAGS
-        )
+        # upload_time = datetime.utcnow() - start_time
+        # bytes_per_second = len(data_file.open_file) / upload_time.total_seconds()
+        # self.send_metric(
+        #     metric_name='ingester.s3_upload_bytes_per_second',
+        #     value=bytes_per_second,
+        #     asynchronous=settings.SUBMIT_METRICS_ASYNCHRONOUSLY,
+        #     **settings.EXTRA_METRICS_TAGS
+        # )
         return {'key': key, 'md5': s3_md5, 'extension': data_file.open_file.extension}
 
     def delete_file(self, path: str, version_id: str):

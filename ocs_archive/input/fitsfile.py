@@ -22,6 +22,9 @@ class FitsFile(DataFile):
         self._normalize_related_frames()
 
     def _remove_blacklist_headers(self, blacklist_headers: tuple):
+        if '' not in blacklist_headers:
+            # Always remove the empty string header since it causes issues
+            self.header_data.remove_header('')
         for header in self.blacklist_headers:
             self.header_data.remove_header(header)
 
@@ -83,6 +86,9 @@ class FitsFile(DataFile):
                             continue
                 raise FileSpecificationException(
                     'Could not find required keywords in headers!')  # Missing one or more required headers
+        else:
+            # If there are no valid fits headers in the file, fall back on passed in metadata
+            super()._create_header_data(file_metadata)
 
     def get_filestore_content_type(self):
         return 'image/fits'

@@ -51,7 +51,7 @@ class HeaderData:
         keys = self.get_related_frame_keys()
         related_frames = {}
         for key in keys:
-            if key in headers:
+            if key in headers and headers[key]:
                 related_frames[key] = headers[key]
         return related_frames
 
@@ -74,7 +74,7 @@ class HeaderData:
         return self.get_headers().get(settings.PUBLIC_DATE_KEY)
 
     def get_reduction_level(self):
-        return self.get_headers().get(settings.REDUCTION_LEVEL_KEY)
+        return self.get_headers().get(settings.REDUCTION_LEVEL_KEY, 0)
 
     def get_instrument_id(self):
         return self.get_headers().get(settings.INSTRUMENT_ID_KEY)

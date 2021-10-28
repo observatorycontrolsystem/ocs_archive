@@ -8,23 +8,25 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='ocs_archive',
-    version='0.1.0',
+    use_scm_version=True,
     description='Base library for the science archive and ingester of an observatory control system',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/observatorycontrolsystem/ocs_archive',
     packages=['ocs_archive', 'ocs_archive.input', 'ocs_archive.settings', 'ocs_archive.storage'],
-    python_requires='>=3.5',
+    python_requires='>=3.6',
     classifiers=[
-        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)'
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+        'Development Status :: 3 - Alpha',
+        'Intended Audience :: Science/Research',
+        'Topic :: Scientific/Engineering :: Astronomy',
+        'Topic :: Scientific/Engineering :: Physics'
     ],
+    keywords=['archive', 'astronomy', 'astrophysics', 'cosmology', 'science', 'ocs', 'observatory'],
     install_requires=[
         'astropy',
-        'requests',
         'boto3',
         'python-dateutil',
-        'lcogt-logging',
-        'opentsdb-python-metrics>=0.2.0'
     ],
     extras_require={
         'tests': ['pytest']

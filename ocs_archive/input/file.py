@@ -103,6 +103,7 @@ class DataFile:
     def _create_header_data(self, file_metadata: dict):
         if self._is_valid_file_metadata(file_metadata):
             self.header_data = HeaderData(file_metadata)
+            return
         # Missing one or more required headers in the input file_metadata
         raise FileSpecificationException('Could not find required keywords in headers!')
 
@@ -127,9 +128,9 @@ class DataFile:
         # of specifying the public date in your file type
         if not self.header_data.get_public_date():
             if (self.header_data.get_configuration_type() in settings.CALIBRATION_TYPES or
-                    any([prop in self.header_data.get_proposal_id() for prop in settings.PUBLIC_PROPOSALS])):
+                    (self.header_data.get_proposal_id() and any([prop in self.header_data.get_proposal_id() for prop in settings.PUBLIC_PROPOSALS]))):
                 public_date = self.header_data.get_observation_date()
-            elif (any([prop in self.header_data.get_proposal_id() for prop in settings.PRIVATE_PROPOSALS]) or
+            elif ((self.header_data.get_proposal_id() and any([prop in self.header_data.get_proposal_id() for prop in settings.PRIVATE_PROPOSALS])) or
                     any([chars in self.open_file.basename for chars in settings.PRIVATE_FILE_TYPES])):
                 # This should be private, set it to 999 years from observation date
                 public_date = (parse(self.header_data.get_observation_date()) + timedelta(days=365 * 999)).isoformat()
@@ -182,11 +183,14 @@ class DataFile:
                 and not self.header_data.headers_are_set(['NAXIS3'])
         ):
             # Find the RA and Dec coordinates of all 4 corners of the image
-            w = wcs.WCS(headers)
-            c1 = w.all_pix2world(1, 1, 1)
-            c2 = w.all_pix2world(1, headers['NAXIS2'], 1)
-            c3 = w.all_pix2world(headers['NAXIS1'], headers['NAXIS2'], 1)
-            c4 = w.all_pix2world(headers['NAXIS1'], 1, 1)
+            try:
+                w = wcs.WCS(headers)
+                c1 = w.all_pix2world(1, 1, 1)
+                c2 = w.all_pix2world(1, headers['NAXIS2'], 1)
+                c3 = w.all_pix2world(headers['NAXIS1'], headers['NAXIS2'], 1)
+                c4 = w.all_pix2world(headers['NAXIS1'], 1, 1)
+            except ValueError:
+                return None
 
         else:
             # This file doesn't have sufficient information to provide an area

@@ -40,7 +40,7 @@ class LcoFitsFile(FitsFile):
                 headers = self.header_data.get_headers()
                 name_parts = self.open_file.basename.split('-')
                 conftype_letter = name_parts[4][0]
-                is_nres = 'igl' in headers.get('ENCID', '') or 'igl' in self.header_data.get_telescope_id()
+                is_nres = 'igl' in headers.get('ENCID', '') or (self.header_data.get_telescope_id() and 'igl' in self.header_data.get_telescope_id())
                 if 'trace' == name_parts[0]:
                     conftype = 'TRACE'
                 elif 'arc' == name_parts[0]:
@@ -107,5 +107,5 @@ class LcoFitsFile(FitsFile):
 
     def get_filestore_path(self):
         if self._is_bpm_file():
-            return '/'.join((self.get_site_id(), self.get_instrument_id(), 'bpm', self.open_file.basename)) + self.open_file.extension
+            return '/'.join((self.header_data.get_site_id(), self.header_data.get_instrument_id(), 'bpm', self.open_file.basename)) + self.open_file.extension
         return super().get_filestore_path()

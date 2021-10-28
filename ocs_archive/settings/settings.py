@@ -7,7 +7,7 @@ def get_tuple_from_environment(variable_name, default):
 
 
 # AWS Credentials and defaults
-BUCKET = os.getenv('BUCKET', 'ingestertest')
+BUCKET = os.getenv('BUCKET', 'testbucket')
 S3_SIGNATURE_VERSION = os.getenv('S3_SIGNATURE_VERSION', 's3v4')
 S3_ENDPOINT_URL = os.getenv('S3_ENDPOINT_URL', 'http://s3.us-west-2.amazonaws.com')
 S3_DAYS_TO_IA_STORAGE = int(os.getenv('S3_DAYS_TO_IA_STORAGE', 60))
@@ -17,6 +17,12 @@ FILESTORE_TYPE = os.getenv('FILESTORE_TYPE', 'dummy')
 
 # Used for local File system storage backend as the root storage directory
 FILESYSTEM_STORAGE_ROOT_DIR = os.getenv('FILESYSTEM_STORAGE_ROOT_DIR', '')
+FILESYSTEM_STORAGE_BASE_URL = os.getenv('FILESYSTEM_STORAGE_BASE_URL', 'http://0.0.0.0/')
+
+# Used to override and update mapping of file extensions to DataFile subclass class dotpath
+# The expected format is a string literal representation of a dictionary, mapping extensions
+# to Datafile subclass absolute dotpath
+FILETYPE_MAPPING_OVERRIDES = ast.literal_eval(os.getenv('FILETYPE_MAPPING_OVERRIDES', "{}"))
 
 # Files we wish to ignore
 IGNORED_CHARS = get_tuple_from_environment('IGNORED_CHARS', '-l00,tstnrs')
@@ -37,7 +43,7 @@ CALIBRATION_TYPES = get_tuple_from_environment('CALIBRATION_TYPES', 'BIAS,DARK,S
 PUBLIC_PROPOSALS = get_tuple_from_environment('PUBLIC_PROPOSALS', 'EPO,calib,standard,pointing')
 
 # Days until a private proposals data becomes public, measured from observation date
-DAYS_UNTIL_PUBLIC = os.getenv('DAYS_UNTIL_PUBLIC', 365)
+DAYS_UNTIL_PUBLIC = int(os.getenv('DAYS_UNTIL_PUBLIC', 365))
 
 # Proposals including these strings will be considered private data (L1PUBDATE far out)
 PRIVATE_PROPOSALS = get_tuple_from_environment('PRIVATE_PROPOSALS', 'LCOEngineering')
