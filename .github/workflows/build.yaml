@@ -30,10 +30,10 @@ jobs:
         pip install coverage coveralls
     - name: Run tests
       run: coverage run -m pytest
-    - name: Coveralls report
-      run: coveralls --service=github
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    # - name: Coveralls report
+    #   run: coveralls --service=github
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish_to_pypi:
     # Only run this job if the run_tests job has succeeded, and if
