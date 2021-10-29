@@ -1,6 +1,4 @@
-from datetime import datetime, timedelta
-from contextlib import contextmanager
-import tarfile
+from datetime import timedelta
 import hashlib
 import os
 import io
@@ -8,12 +6,9 @@ import io
 from dateutil.parser import parse
 from astropy import wcs, units
 from astropy.coordinates import Angle
-from astropy.io import fits
 
 from ocs_archive.settings import settings
 from ocs_archive.input.headerdata import HeaderData
-
-from abc import ABC, abstractmethod
 
 
 class FileSpecificationException(Exception):
@@ -21,10 +16,9 @@ class FileSpecificationException(Exception):
 
 
 class File:
-    """
-    Operates on an open file-like object to extract its extension and retreive its metadata
-    """
+    """Operates on an open file-like object to extract its extension and retreive its metadata"""
     def __init__(self, fileobj, path=None):
+        """Create a File from a file like object and optional string path."""
         self.fileobj = fileobj
         self.path = path
         self.basename, self.extension = self.get_basename_and_extension(self.filename)
@@ -37,6 +31,7 @@ class File:
         return hashlib.md5(self.get_from_start().read()).hexdigest()
 
     def __len__(self):
+        """Returns the length of the file like object in bytes"""
         self.fileobj.seek(0, os.SEEK_END)
         length = self.fileobj.tell()
         self.fileobj.seek(0)
@@ -73,6 +68,7 @@ class EmptyFile(File):
     Implements the file methods but has no open file, just the supplied filename
     """
     def __init__(self, path):
+        """Create an empty 0 byte File with the given path name."""
         super().__init__(io.BytesIO(b''), path=path)
 
     def get_md5(self):
@@ -92,10 +88,13 @@ class DataFile:
     Base class for extracting metadata needed to store and filter data from an input file-like object.
     This class should be subclassed and methods overriden to support other input data formats in the archive.
     """
-    def __init__(self, open_file: File, file_metadata: dict = {}, blacklist_headers: tuple = settings.HEADER_BLACKLIST, required_headers: tuple = settings.REQUIRED_HEADERS):
+    def __init__(self, open_file: File, file_metadata: dict = None, blacklist_headers: tuple = settings.HEADER_BLACKLIST, required_headers: tuple = settings.REQUIRED_HEADERS):
+        """Create a DataFile with an open File object and optional metadata."""
         self.open_file = open_file
         self.blacklist_headers = blacklist_headers
         self.required_headers = required_headers
+        if file_metadata is None:
+            file_metadata = {}
         self._create_header_data(file_metadata)
         self._repair_observation_day()
         self._repair_public_date()
@@ -225,9 +224,7 @@ class DataFile:
         }
 
     def get_filestore_path(self):
-        """
-        Creates a path to use in the file store using the metadata of this file 
-        """
+        """Creates a path to use in the file store using the metadata of this file."""
         datatype = 'raw' if self.header_data.get_reduction_level() == 0 else 'processed'
         # Default directory is site/instrument/obsday/datatype/
         return '/'.join((self.header_data.get_site_id(), self.header_data.get_instrument_id(), self.header_data.get_observation_day(), datatype, self.open_file.basename)) + self.open_file.extension

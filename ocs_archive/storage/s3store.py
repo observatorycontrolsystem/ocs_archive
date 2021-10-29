@@ -5,7 +5,6 @@ from contextlib import contextmanager
 
 from dateutil.parser import parse
 import boto3
-from botocore.exceptions import EndpointConnectionError, ConnectionClosedError
 
 from ocs_archive.input.file import DataFile
 from ocs_archive.storage.filestore import FileStore, FileStoreConnectionError
@@ -15,16 +14,14 @@ logger = logging.getLogger('ocs_ingester')
 
 
 def strip_quotes_from_etag(etag):
-    """
-    Amazon returns the md5 sum of the uploaded
-    file in the 'ETag' header wrapped in quotes
-    """
+    """Amazon returns the md5 sum of the uploaded file in the 'ETag' header wrapped in quotes"""
     if etag.startswith('"') and etag.endswith('"'):
         return etag[1:-1]
 
 
 class S3Store(FileStore):
     def __init__(self, bucket: str = settings.BUCKET):
+        """Create an S3 file storage manager using the bucket specified."""
         super().__init__()
         self.bucket = bucket
 

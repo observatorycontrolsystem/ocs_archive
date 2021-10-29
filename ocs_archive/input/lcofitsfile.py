@@ -14,7 +14,8 @@ LETTER_TO_OBSTYPE = {
 }
 
 class LcoFitsFile(FitsFile):
-    def __init__(self, open_file: File, file_metadata: dict = {}, blacklist_headers: tuple = settings.HEADER_BLACKLIST, required_headers: tuple = settings.REQUIRED_HEADERS):
+    def __init__(self, open_file: File, file_metadata: dict = None, blacklist_headers: tuple = settings.HEADER_BLACKLIST, required_headers: tuple = settings.REQUIRED_HEADERS):
+        """LCO specific FitsFile format, provides some extra repair for broken headers from the filename."""
         super().__init__(open_file, file_metadata, blacklist_headers, required_headers)
         self._check_catalog()
         self._repair_configuration_type()
@@ -94,9 +95,7 @@ class LcoFitsFile(FitsFile):
                     self.header_data.update_headers({settings.REDUCTION_LEVEL_KEY: MIN_REDUCTION})
 
     def _is_bpm_file(self):
-        """
-        Check if the file is a bad pixel mask using several LCO specific rules
-        """
+        """Check if the file is a bad pixel mask using several LCO specific rules"""
         headers = self.header_data.get_headers()
         if self.header_data.get_configuration_type() == 'BPM' or headers.get('EXTNAME') == 'BPM':
             return True

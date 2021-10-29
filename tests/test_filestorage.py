@@ -56,7 +56,7 @@ def mocked_boto3_client(*args, **kwargs):
         def generate_presigned_url(self, *args, **kwargs):
             params = kwargs['Params']
             return f"s3://{params['Bucket']}/{params['Key']}"
-        
+
         def delete_object(self, *args, **kwargs):
             pass
 
@@ -72,7 +72,6 @@ class TestS3Store(unittest.TestCase):
 
     @patch('boto3.resource', side_effect=mocked_s3_object)
     def test_upload_file(self, s3_mock):
-        fits_dict = {'SITEID': 'tst', 'INSTRUME': 'inst01', 'DATE-OBS': '2019-10-11T00:11:22.123'}
         with open(FITS_FILE, 'rb') as fileobj:
             data_file = LcoFitsFile(File(fileobj))
             self.s3.store_file(data_file)
@@ -160,5 +159,5 @@ class TestFileStoreFactory(unittest.TestCase):
 
     def test_filestore_factory_raises_exception_for_nonexistent_type(self):
         with self.assertRaises(FileStoreSpecificationError) as fsse:
-            filestore_class = FileStoreFactory.get_file_store_class('crazystore')
+            FileStoreFactory.get_file_store_class('crazystore')
         self.assertEqual('Invalid FileStore type crazystore', str(fsse.exception))

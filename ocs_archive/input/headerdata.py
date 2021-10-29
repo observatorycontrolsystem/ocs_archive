@@ -2,9 +2,12 @@ from ocs_archive.settings import settings
 
 
 class HeaderData:
-    def __init__(self, header_data: dict = {}):
+    def __init__(self, header_data: dict = None):
+        """Creates HeaderData with input dictionary of headers."""
+        if header_data is None:
+            header_data = {}
         self.header_data = header_data
-    
+
     def get_headers(self):
         return self.header_data
 
@@ -37,7 +40,7 @@ class HeaderData:
         }
 
     def headers_are_set(self, keys: list):
-        """Check that the values for the provided headers are set"""
+        """Check that the values for the provided headers are set."""
         headers = self.get_headers()
         empty_values = [None, '']
         values = [headers.get(key) for key in keys]
