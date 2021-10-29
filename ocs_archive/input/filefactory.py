@@ -20,7 +20,7 @@ class FileFactory:
     @staticmethod
     def get_datafile_class_for_extension(extension: str):
         extensions_dict = EXTENSION_TO_FILE_CLASS.copy()
-        if type(settings.FILETYPE_MAPPING_OVERRIDES) is dict:
+        if isinstance(settings.FILETYPE_MAPPING_OVERRIDES, dict):
             extensions_dict.update(settings.FILETYPE_MAPPING_OVERRIDES)
         if extension not in extensions_dict:
             raise FileSpecificationException(f'file extension {extension} is not a currently supported file type')

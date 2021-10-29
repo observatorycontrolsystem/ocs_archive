@@ -1,4 +1,3 @@
-from io import BytesIO
 import os
 from contextlib import contextmanager
 
@@ -7,12 +6,13 @@ from ocs_archive.input.file import DataFile
 from ocs_archive.settings import settings
 
 class FileSystemStore(FileStore):
-    """
-    This class stores the files locally on the file system, in the base directory
-    specified. It does not support versioning of files, and will overwrite any file
+    """This class stores the files locally on the file system, in the base directory specified.
+    
+    It does not support versioning of files, and will overwrite any file
     with the same path and filename. Please use S3 storage if you want versioning support.
     """
     def __init__(self, root_dir: str = settings.FILESYSTEM_STORAGE_ROOT_DIR):
+        """Create filesystem storage manager using the root directory specified."""
         super().__init__()
         self.root_dir = root_dir
 

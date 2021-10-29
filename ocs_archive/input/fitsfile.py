@@ -14,7 +14,8 @@ class FitsFile(DataFile):
         settings.OBSERVATION_ID_KEY, settings.CONFIGURATION_ID_KEY
     ]
 
-    def __init__(self, open_file: File, file_metadata: dict = {}, blacklist_headers: tuple = settings.HEADER_BLACKLIST, required_headers: tuple = settings.REQUIRED_HEADERS):
+    def __init__(self, open_file: File, file_metadata: dict = None, blacklist_headers: tuple = settings.HEADER_BLACKLIST, required_headers: tuple = settings.REQUIRED_HEADERS):
+        """Loads in fits file headers, then does some automatic cleanup and normalization of values."""
         super().__init__(open_file, file_metadata, blacklist_headers, required_headers)
         self._check_extension()
         self._remove_blacklist_headers(blacklist_headers)

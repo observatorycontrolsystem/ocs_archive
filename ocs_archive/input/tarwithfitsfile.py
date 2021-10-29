@@ -1,9 +1,8 @@
 from astropy.io import fits
-import io
 import tarfile
 from contextlib import contextmanager
 
-from ocs_archive.input.file import DataFile, FileSpecificationException
+from ocs_archive.input.file import FileSpecificationException
 from ocs_archive.input.fitsfile import FitsFile
 
 
@@ -21,10 +20,10 @@ class TarWithFitsFile(FitsFile):
 
     @contextmanager
     def get_fits(self):
-        """
-        Return the fits file associated with this file. Generally this just the fileobj itself,
-        but certain spectral data must have their fits files extracted. Use this as a context
-        manager.
+        """Return the fits file associated with this file.
+        
+        Generally this just the fileobj itself, but certain spectral data must have their
+        fits files extracted. Use this as a context manager.
         """
         fits_file, tar_file = None, None
         try:

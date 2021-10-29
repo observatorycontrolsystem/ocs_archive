@@ -1,8 +1,8 @@
 # OCS Archive Library
 
 ![Build](https://github.com/observatorycontrolsystem/ocs_archive/workflows/Build/badge.svg)
-[![Coverage Status](https://coveralls.io/repos/github/observatorycontrolsystem/ocs_archive/badge.svg?branch=master)](https://coveralls.io/github/observatorycontrolsystem/ocs_archive?branch=main)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/24eb8debeb0c499ca192b4497a1f1e12)](https://www.codacy.com/gh/observatorycontrolsystem/ocs_archive?utm_source=github.com&utm_medium=referral&utm_content=observatorycontrolsystem/ocs_archive&utm_campaign=Badge_Grade)
+[![Coverage Status](https://coveralls.io/repos/github/observatorycontrolsystem/ocs_archive/badge.svg)](https://coveralls.io/github/observatorycontrolsystem/ocs_archive)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/ede4bb8145d348109a330ed8ba8479b1)](https://www.codacy.com/gh/observatorycontrolsystem/ocs_archive/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=observatorycontrolsystem/ocs_archive&amp;utm_campaign=Badge_Grade)
 
 A base library for the Science Archive and Ingester library to support generalized input file types, generalized data stores, and shared configuration items. This library is configurable via environment variables, but more customization is possible by subclassing the `DataFile` class for a specific file type, or subclassing the `FileStore` class for a specific file storage scheme.
 
@@ -10,7 +10,7 @@ A base library for the Science Archive and Ingester library to support generaliz
 
 Optional prerequisites may be skipped for reduced functionality.
 
-- Python >= 3.6
+-  Python >= 3.6
 
 ## Installation
 

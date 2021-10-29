@@ -1,9 +1,4 @@
-from astropy.io import fits
-import io
-import tarfile
-from contextlib import contextmanager
-
-from ocs_archive.input.file import DataFile, FileSpecificationException
+from ocs_archive.input.file import FileSpecificationException
 from ocs_archive.input.tarwithfitsfile import TarWithFitsFile
 from ocs_archive.input.lcofitsfile import LcoFitsFile
 
