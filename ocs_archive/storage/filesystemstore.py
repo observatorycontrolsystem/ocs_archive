@@ -7,7 +7,7 @@ from ocs_archive.settings import settings
 
 class FileSystemStore(FileStore):
     """This class stores the files locally on the file system, in the base directory specified.
-    
+
     It does not support versioning of files, and will overwrite any file
     with the same path and filename. Please use S3 storage if you want versioning support.
     """

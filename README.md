@@ -10,7 +10,7 @@ A base library for the Science Archive and Ingester library to support generaliz
 
 Optional prerequisites may be skipped for reduced functionality.
 
--  Python >= 3.6
+-   Python >= 3.6
 
 ## Installation
 

@@ -260,7 +260,7 @@ class TestLcoFits(unittest.TestCase):
         data_file = LcoFitsFile(self.file, file_metadata=headers, required_headers=self.required_headers)
         header_data = data_file.get_header_data()
         self.assertEqual(90, header_data.get_reduction_level())
-    
+
     def test_reduction_level(self):
         headers = {}
         data_file = LcoFitsFile(self.file, file_metadata=headers, required_headers=self.required_headers)
@@ -391,12 +391,12 @@ class TestFileFactory(unittest.TestCase):
     def test_file_factory_raises_exception_for_nonexistent_class_override(self):
         fits_file = EmptyFile('fits_file.fits')
         with self.assertRaises(FileSpecificationException) as fse:
-            fits_file_class = FileFactory.get_datafile_class_for_extension(fits_file.extension)
+            FileFactory.get_datafile_class_for_extension(fits_file.extension)
         self.assertEqual('class FakeFitsFile does not exist within module ocs_archive.input.fitsfile. Please ensure the class path is correct', str(fse.exception))
 
     @patch('ocs_archive.settings.settings.FILETYPE_MAPPING_OVERRIDES', {'.fits': 'ocs_archive.input.file.File'})
     def test_file_factory_raises_exception_for_wrong_subclass_override(self):
         fits_file = EmptyFile('fits_file.fits')
         with self.assertRaises(FileSpecificationException) as fse:
-            fits_file_class = FileFactory.get_datafile_class_for_extension(fits_file.extension)
+            FileFactory.get_datafile_class_for_extension(fits_file.extension)
         self.assertEqual('class File must be a subclass of the ocs_archive.input.file.DataFile class', str(fse.exception))

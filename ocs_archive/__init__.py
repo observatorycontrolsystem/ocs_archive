@@ -1,1 +1,1 @@
-"""ocs_archive provides packages for loading input files and setings, and storing data files"""
+"""ocs_archive provides packages for loading input files and setings, and storing data files."""

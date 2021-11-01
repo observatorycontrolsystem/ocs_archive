@@ -14,7 +14,7 @@ logger = logging.getLogger('ocs_ingester')
 
 
 def strip_quotes_from_etag(etag):
-    """Amazon returns the md5 sum of the uploaded file in the 'ETag' header wrapped in quotes"""
+    """Amazon returns the md5 sum of the uploaded file in the 'ETag' header wrapped in quotes."""
     if etag.startswith('"') and etag.endswith('"'):
         return etag[1:-1]
 
@@ -64,15 +64,7 @@ class S3Store(FileStore):
                 'storage_class': storage_class,
             }
         })
-        # Record metric for the bytes transferred / time to upload
-        # upload_time = datetime.utcnow() - start_time
-        # bytes_per_second = len(data_file.open_file) / upload_time.total_seconds()
-        # self.send_metric(
-        #     metric_name='ingester.s3_upload_bytes_per_second',
-        #     value=bytes_per_second,
-        #     asynchronous=settings.SUBMIT_METRICS_ASYNCHRONOUSLY,
-        #     **settings.EXTRA_METRICS_TAGS
-        # )
+
         return {'key': key, 'md5': s3_md5, 'extension': data_file.open_file.extension}
 
     def delete_file(self, path: str, version_id: str):

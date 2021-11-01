@@ -116,7 +116,7 @@ class TestFileSystemStore(unittest.TestCase):
         path = self.base_fits_file.get_filestore_path()
         url = self.file_system_store.get_url(path, '', 0)
         self.assertEqual(url, os.path.join('http://123.0.0.456/', path))
-    
+
     def test_all_filesystem_operations(self):
         path = self.base_fits_file.get_filestore_path()
         # Save the file to disk

@@ -45,7 +45,7 @@ class HeaderData:
         empty_values = [None, '']
         values = [headers.get(key) for key in keys]
         return all([value not in empty_values for value in values])
-    
+
     def get_related_frame_keys(self):
         return settings.RELATED_FRAME_KEYS
 

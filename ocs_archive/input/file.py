@@ -16,7 +16,7 @@ class FileSpecificationException(Exception):
 
 
 class File:
-    """Operates on an open file-like object to extract its extension and retreive its metadata"""
+    """Operates on an open file-like object to extract its extension and retreive its metadata."""
     def __init__(self, fileobj, path=None):
         """Create a File from a file like object and optional string path."""
         self.fileobj = fileobj
@@ -31,7 +31,7 @@ class File:
         return hashlib.md5(self.get_from_start().read()).hexdigest()
 
     def __len__(self):
-        """Returns the length of the file like object in bytes"""
+        """Returns the length of the file like object in bytes."""
         self.fileobj.seek(0, os.SEEK_END)
         length = self.fileobj.tell()
         self.fileobj.seek(0)
@@ -64,9 +64,7 @@ class File:
 
 
 class EmptyFile(File):
-    """
-    Implements the file methods but has no open file, just the supplied filename
-    """
+    """Implements the file methods but has no open file, just the supplied filename."""
     def __init__(self, path):
         """Create an empty 0 byte File with the given path name."""
         super().__init__(io.BytesIO(b''), path=path)

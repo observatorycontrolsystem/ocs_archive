@@ -1,4 +1,3 @@
-from astropy.io import fits
 import tarfile
 from contextlib import contextmanager
 
@@ -20,8 +19,9 @@ class TarWithFitsFile(FitsFile):
 
     @contextmanager
     def get_fits(self):
-        """Return the fits file associated with this file.
-        
+        """
+        Return the fits file associated with this file.
+
         Generally this just the fileobj itself, but certain spectral data must have their
         fits files extracted. Use this as a context manager.
         """
