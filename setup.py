@@ -23,6 +23,7 @@ setup(
         'Topic :: Scientific/Engineering :: Physics'
     ],
     keywords=['archive', 'astronomy', 'astrophysics', 'cosmology', 'science', 'ocs', 'observatory'],
+    setup_requires=['setuptools_scm'],
     install_requires=[
         'astropy',
         'boto3',
