@@ -19,6 +19,14 @@ FILESTORE_TYPE = os.getenv('FILESTORE_TYPE', 'dummy')
 FILESYSTEM_STORAGE_ROOT_DIR = os.getenv('FILESYSTEM_STORAGE_ROOT_DIR', '')
 FILESYSTEM_STORAGE_BASE_URL = os.getenv('FILESYSTEM_STORAGE_BASE_URL', 'http://0.0.0.0/')
 
+# Used to specify the location and authentication details for the Observation Portal
+OBSERVATION_PORTAL_BASE_URL = os.getenv('OBSERVATION_PORTAL_BASE_URL')
+OBSERVATION_PORTAL_API_TOKEN = os.getenv('OBSERVATION_PORTAL_API_TOKEN')
+
+# Used to specify the proposal tags that denote whether the data from a proposal should be public or private
+PRIVATE_PROPOSAL_TAGS = get_tuple_from_environment('PRIVATE_PROPOSAL_TAGS', 'private,internal')
+PUBLIC_PROPOSAL_TAGS = get_tuple_from_environment('PRIVATE_PROPOSAL_TAGS', 'public')
+
 # Used to override and update mapping of file extensions to DataFile subclass class dotpath
 # The expected format is a string literal representation of a dictionary, mapping extensions
 # to Datafile subclass absolute dotpath
