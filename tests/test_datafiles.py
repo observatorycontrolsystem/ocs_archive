@@ -134,7 +134,7 @@ class TestDataFile(unittest.TestCase):
 
     @patch('ocs_archive.input.file.settings.OBSERVATION_PORTAL_BASE_URL', 'https://obs.portal/')
     @patch('ocs_archive.input.file.settings.OBSERVATION_PORTAL_API_TOKEN', 'asdf')
-    @patch('ocs_archive.input.file.settings.PUBLIC_PROPOSAL_TAGS', ('private',))
+    @patch('ocs_archive.input.file.settings.PRIVATE_PROPOSAL_TAGS', ('private',))
     @responses.activate
     def test_private_in_portal(self):
         headers = {
@@ -151,7 +151,7 @@ class TestDataFile(unittest.TestCase):
     @patch('ocs_archive.input.file.settings.PUBLIC_PROPOSALS', ('EPOTHING',))
     @patch('ocs_archive.input.file.settings.OBSERVATION_PORTAL_BASE_URL', 'https://obs.portal/')
     @patch('ocs_archive.input.file.settings.OBSERVATION_PORTAL_API_TOKEN', 'asdf')
-    @patch('ocs_archive.input.file.settings.PUBLIC_PROPOSAL_TAGS', ('private',))
+    @patch('ocs_archive.input.file.settings.PRIVATE_PROPOSAL_TAGS', ('private',))
     @responses.activate
     def test_no_data_privacy_tags_falls_back_to_environment_variables(self):
         headers = {
