@@ -122,7 +122,7 @@ class DataFile:
 
     @property
     def data_privacy_tags(self):
-        """Given a set of proposal tags, return tags that match tags defined as data privacy tags.
+        """Given a set of proposal tags, return tags that match tags defined as data privacy tags
 
         These are tags defined in settings.PRIVATE_PROPOSAL_TAGS and settings.PUBLIC_PROPOSAL_TAGS
         """
@@ -154,7 +154,7 @@ class DataFile:
             if observation_date:
                 observation_day = observation_date.split('T')[0].replace('-', '')
                 self.header_data.update_headers({settings.OBSERVATION_DAY_KEY: observation_day})
-    
+
     def _repair_public_date(self):
         # Set the public date based on observation date. Should be overriden if you have another method
         # of specifying the public date in your file type

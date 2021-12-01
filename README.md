@@ -32,6 +32,8 @@ Add the `ocs_archive` package to your python environment:
 | FileStore | `FILESTORE_TYPE` | Type of filestorage to use. Options are `dummy`, `local`, or `s3`. | `dummy` |
 |           | `FILESYSTEM_STORAGE_ROOT_DIR` | If using `local` file storage, this is the directory on the local filesystem to use as the root of the storage directories | _empty string_ |
 |           | `FILESYSTEM_STORAGE_BASE_URL` | If using `local` file storage, this is the base URL at which those files will be hosted from | `http://0.0.0.0/` |
+| Observation Portal | `OBSERVATION_PORTAL_BASE_URL` | Base URL for the Observation Portal | _empty string_ |
+|                    | `OBSERVATION_PORTAL_API_TOKEN` | API Token used to authenticate with the Observation Portal | _empty string_ |
 | AWS | `BUCKET` | If using `s3` file storage; AWS S3 Bucket Name | `testbucket` |
 |     | `AWS_ACCESS_KEY_ID` | If using `s3` file storage; AWS Access Key with write access to the S3 bucket | _empty string_ |
 |     | `AWS_SECRET_ACCESS_KEY` | If using `s3` file storage; AWS Secret Access Key | _empty string_ |
@@ -43,6 +45,8 @@ Add the `ocs_archive` package to your python environment:
 |          | `REQUIRED_HEADERS` | Comma delimited string list of header values that must be present in the DataFile. This can be overriden when instantiating a DataFile as well as via environment variable |
 |          | `NULL_HEADER_VALUES` | Comma delimited string list of header values that should be turned into `None` or empty keys. This only applies to the FitsFile class. | `N/A,UNSPECIFIED,UNKNOWN` |
 |          | `CALIBRATION_TYPES` | Comma delimited string list of configuration types which represent calibration images. This is used to automatically set calibration images public date to be the observation date if it is not present | `BIAS,DARK,SKYFLAT,EXPERIMENTAL` |
+|          | `PUBLIC_PROPOSAL_TAGS` | A comma delimited string list of Observation Portal proposal tags to denote data from this proposal as public. If public, the public date will be set to the observation date. The ocs_archive will fall back to the list of `PUBLIC_PROPOSALS` if any of a proposal's tags are not found in this list. | `public` |
+|          | `PRIVATE_PROPOSAL_TAGS` | A comma delimited string list of Observation Portal proposal tags to denote data from this proposal as private. If private, the public date will be set to 999 years in the future. The ocs_archive will fall back to the list of `PRIVATE_PROPOSALS` if any of a proposal's tags are not found in this list. | `private,internal` |
 |          | `PUBLIC_PROPOSALS` | Comma delimited string list of proposal IDs which represent public proposals. This is used to set the public date of observations under those proposals to the observation date if it is not present. The matching is based on if each character group appears anywhere within the proposal ID | `EPO,calib,standard,pointing` |
 |          | `PRIVATE_PROPOSALS` | A comma delimited string list of proposal IDs which represent private proposals. This is used to set the public date of the observations under those proposals to be 999 years in the future. The matching is based on if each character group appears anywhere within the proposal ID | `LCOEngineering` |
 |          | `DAYS_UNTIL_PUBLIC` | The number of days until user data becomes public by default. This is added onto the observation date to get the public date if one is not specifed with the data | `365` |
