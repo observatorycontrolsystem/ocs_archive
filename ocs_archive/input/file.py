@@ -105,7 +105,7 @@ class DataFile:
     @property
     @lru_cache()
     def proposal_tags(self):
-        """Return the tags associated with a proposal in the Observation Portal"""
+        """Return the tags associated with a proposal in the Observation Portal."""
         # If the observation portal connection isn't configured, don't try and fetch proposal tags
         if None in [settings.OBSERVATION_PORTAL_BASE_URL, settings.OBSERVATION_PORTAL_API_TOKEN]:
             return None
@@ -122,8 +122,8 @@ class DataFile:
 
     @property
     def data_privacy_tags(self):
-        """ Given a set of proposal tags, return tags that match tags defined as data privacy tags
-        
+        """Given a set of proposal tags, return tags that match tags defined as data privacy tags.
+    
         These are tags defined in settings.PRIVATE_PROPOSAL_TAGS and settings.PUBLIC_PROPOSAL_TAGS
         """
         if self.proposal_tags is not None:
