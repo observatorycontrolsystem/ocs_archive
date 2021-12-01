@@ -123,7 +123,7 @@ class DataFile:
     @property
     def data_privacy_tags(self):
         """Given a set of proposal tags, return tags that match tags defined as data privacy tags.
-    
+
         These are tags defined in settings.PRIVATE_PROPOSAL_TAGS and settings.PUBLIC_PROPOSAL_TAGS
         """
         if self.proposal_tags is not None:
