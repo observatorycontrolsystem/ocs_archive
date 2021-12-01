@@ -9,7 +9,7 @@ from dateutil.parser import parse
 from astropy import wcs, units
 from astropy.coordinates import Angle
 import requests
-from functools import cached_property
+from functools import lru_cache
 from requests.models import HTTPError
 
 from ocs_archive.settings import settings
@@ -102,7 +102,8 @@ class DataFile:
         self._repair_observation_day()
         self._repair_public_date()
 
-    @cached_property
+    @property
+    @lru_cache()
     def proposal_tags(self):
         """ Return the tags associated with a proposal in the Observation Portal
         """
