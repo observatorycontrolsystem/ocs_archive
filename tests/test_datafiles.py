@@ -165,6 +165,23 @@ class TestDataFile(unittest.TestCase):
         header_data = data_file.get_header_data()
         self.assertEqual(header_data.get_public_date(), header_data.get_observation_date())
 
+    @patch('ocs_archive.input.file.settings.PUBLIC_PROPOSALS', ('MYPUBLICPROP',))
+    @patch('ocs_archive.input.file.settings.OBSERVATION_PORTAL_BASE_URL', 'https://obs.portal/')
+    @patch('ocs_archive.input.file.settings.OBSERVATION_PORTAL_API_TOKEN', 'asdf')
+    @patch('ocs_archive.input.file.settings.PRIVATE_PROPOSAL_TAGS', ('private',))
+    @responses.activate
+    def test_500_error_fallback_to_environment_variable(self):
+        headers = {
+            'PROPID': 'MYPUBLICPROP',
+            'DATE-OBS': '2016-04-01T00:00:00+00:00',
+            'OBSTYPE': 'EXPOSE'
+        }
+        responses.add(responses.GET, 'https://obs.portal/api/proposals/MYPUBLICPROP',
+                      status=500)
+        data_file = DataFile(self.file, file_metadata=headers, required_headers=[])
+        header_data = data_file.get_header_data()
+        self.assertEqual(header_data.get_public_date(), header_data.get_observation_date())
+
     def test_get_wcs_corners_from_dict_for_ccd(self):
         headers = {'CD1_1': 6, 'CD1_2': 2, 'CD2_1': 3, 'CD2_2': 4, 'NAXIS1': 1000, 'NAXIS2': 1100, 'DATE-OBS': '2015-02-19T13:56:05.261'}
         data_file = DataFile(self.file, file_metadata=headers, required_headers=[])
