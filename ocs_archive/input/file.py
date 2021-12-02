@@ -128,9 +128,9 @@ class DataFile:
         """
         if self.proposal_tags is not None:
             privacy_tags = [tag for tag in self.proposal_tags if tag in itertools.chain(settings.PRIVATE_PROPOSAL_TAGS, settings.PUBLIC_PROPOSAL_TAGS)]
-            return privacy_tags if privacy_tags != [] else None
+            return privacy_tags
         else:
-            return None
+            return []
 
     def _create_header_data(self, file_metadata: dict):
         if self._is_valid_file_metadata(file_metadata):
@@ -160,11 +160,10 @@ class DataFile:
         # of specifying the public date in your file type
         if not self.header_data.get_public_date():
             # Check if the proposal is denoted as public or private in the observation portal
-            if self.data_privacy_tags:
-                if any([tag in settings.PRIVATE_PROPOSAL_TAGS for tag in self.proposal_tags]):
-                    public_date = (parse(self.header_data.get_observation_date()) + timedelta(days=365 * 999)).isoformat()
-                elif any([tag in settings.PUBLIC_PROPOSAL_TAGS for tag in self.proposal_tags]):
-                    public_date = self.header_data.get_observation_date()
+            if any([tag in settings.PRIVATE_PROPOSAL_TAGS for tag in self.data_privacy_tags]):
+                public_date = (parse(self.header_data.get_observation_date()) + timedelta(days=365 * 999)).isoformat()
+            elif any([tag in settings.PUBLIC_PROPOSAL_TAGS for tag in self.data_privacy_tags]):
+                public_date = self.header_data.get_observation_date()
             else:
                 # If it's a calibration frame, it's immediately pubic
                 if (self.header_data.get_configuration_type() in settings.CALIBRATION_TYPES or
