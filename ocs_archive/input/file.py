@@ -2,10 +2,15 @@ from datetime import timedelta
 import hashlib
 import os
 import io
+from urllib.parse import urljoin
+import itertools
 
 from dateutil.parser import parse
 from astropy import wcs, units
 from astropy.coordinates import Angle
+import requests
+from functools import lru_cache
+from requests.models import HTTPError
 
 from ocs_archive.settings import settings
 from ocs_archive.input.headerdata import HeaderData
@@ -97,6 +102,36 @@ class DataFile:
         self._repair_observation_day()
         self._repair_public_date()
 
+    @property
+    @lru_cache()
+    def proposal_tags(self):
+        """Return the tags associated with a proposal in the Observation Portal."""
+        # If the observation portal connection isn't configured, don't try and fetch proposal tags
+        if None in [settings.OBSERVATION_PORTAL_BASE_URL, settings.OBSERVATION_PORTAL_API_TOKEN]:
+            return None
+
+        proposal_id = self.header_data.get_proposal_id()
+        proposal_url = urljoin(settings.OBSERVATION_PORTAL_BASE_URL, f'/api/proposals/{proposal_id}')
+        try:
+            response = requests.get(proposal_url,
+                                    headers={'Authorization': f'Token {settings.OBSERVATION_PORTAL_API_TOKEN}'})
+            response.raise_for_status()
+        except HTTPError:
+            return None
+        return response.json()['tags']
+
+    @property
+    def data_privacy_tags(self):
+        """Given a set of proposal tags, return tags that match tags defined as data privacy tags
+
+        These are tags defined in settings.PRIVATE_PROPOSAL_TAGS and settings.PUBLIC_PROPOSAL_TAGS
+        """
+        if self.proposal_tags is not None:
+            privacy_tags = [tag for tag in self.proposal_tags if tag in itertools.chain(settings.PRIVATE_PROPOSAL_TAGS, settings.PUBLIC_PROPOSAL_TAGS)]
+            return privacy_tags
+        else:
+            return []
+
     def _create_header_data(self, file_metadata: dict):
         if self._is_valid_file_metadata(file_metadata):
             self.header_data = HeaderData(file_metadata)
@@ -124,16 +159,25 @@ class DataFile:
         # Set the public date based on observation date. Should be overriden if you have another method
         # of specifying the public date in your file type
         if not self.header_data.get_public_date():
-            if (self.header_data.get_configuration_type() in settings.CALIBRATION_TYPES or
-                    (self.header_data.get_proposal_id() and any([prop in self.header_data.get_proposal_id() for prop in settings.PUBLIC_PROPOSALS]))):
-                public_date = self.header_data.get_observation_date()
-            elif ((self.header_data.get_proposal_id() and any([prop in self.header_data.get_proposal_id() for prop in settings.PRIVATE_PROPOSALS])) or
-                    any([chars in self.open_file.basename for chars in settings.PRIVATE_FILE_TYPES])):
-                # This should be private, set it to 999 years from observation date
+            # Check if the proposal is denoted as public or private in the observation portal
+            if any([tag in settings.PRIVATE_PROPOSAL_TAGS for tag in self.data_privacy_tags]):
                 public_date = (parse(self.header_data.get_observation_date()) + timedelta(days=365 * 999)).isoformat()
+            elif any([tag in settings.PUBLIC_PROPOSAL_TAGS for tag in self.data_privacy_tags]):
+                public_date = self.header_data.get_observation_date()
             else:
-                # This should be proprietary, set it to X days from observation date
-                public_date = (parse(self.header_data.get_observation_date()) + timedelta(days=settings.DAYS_UNTIL_PUBLIC)).isoformat()
+                # If it's a calibration frame, it's immediately pubic
+                if (self.header_data.get_configuration_type() in settings.CALIBRATION_TYPES or
+                        (self.header_data.get_proposal_id() and any([prop in self.header_data.get_proposal_id() for prop in settings.PUBLIC_PROPOSALS]))):
+                    public_date = self.header_data.get_observation_date()
+                # If the proposal is set to private or the file type is a private file type, make it private forever
+                elif ((self.header_data.get_proposal_id() and any([prop in self.header_data.get_proposal_id() for prop in settings.PRIVATE_PROPOSALS])) or
+                        any([chars in self.open_file.basename for chars in settings.PRIVATE_FILE_TYPES])):
+                    public_date = (parse(self.header_data.get_observation_date()) + timedelta(days=365 * 999)).isoformat()
+                # Finally, if none of these, make it proprietary
+                else:
+                    # This should be proprietary, set it to X days from observation date
+                    public_date = (parse(self.header_data.get_observation_date()) + timedelta(days=settings.DAYS_UNTIL_PUBLIC)).isoformat()
+            
             self.header_data.update_headers({settings.PUBLIC_DATE_KEY: public_date})
 
     def _is_valid_file_metadata(self, metadata_dict: dict):

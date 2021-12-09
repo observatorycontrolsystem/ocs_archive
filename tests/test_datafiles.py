@@ -4,6 +4,8 @@ import os
 from datetime import timedelta
 from dateutil.parser import parse
 
+import responses
+
 from ocs_archive.input.file import File, DataFile, EmptyFile, FileSpecificationException
 from ocs_archive.input.fitsfile import FitsFile
 from ocs_archive.input.filefactory import FileFactory
@@ -28,7 +30,7 @@ class TestDataFile(unittest.TestCase):
         header_data = data_file.get_header_data()
         self.assertEqual('20200131', header_data.get_observation_day())
 
-    @patch.dict(os.environ, {'PUBLIC_PROPOSALS': 'EPOTHING'})
+    @patch('ocs_archive.input.file.settings.PUBLIC_PROPOSALS', ('EPOTHING',))
     def test_public_date_public_file(self):
         headers = {
             'PROPID': 'EPOTHING',
@@ -39,7 +41,7 @@ class TestDataFile(unittest.TestCase):
         header_data = data_file.get_header_data()
         self.assertEqual(header_data.get_public_date(), header_data.get_observation_date())
 
-    @patch.dict(os.environ, {'DAYS_UNTIL_PUBLIC': '365'})
+    @patch('ocs_archive.input.file.settings.DAYS_UNTIL_PUBLIC', 365)
     def test_public_date_normal_file(self):
         headers = {
             'PROPID': 'LCO2015',
@@ -51,7 +53,7 @@ class TestDataFile(unittest.TestCase):
         public_date = (parse(header_data.get_observation_date()) + timedelta(days=settings.DAYS_UNTIL_PUBLIC)).isoformat()
         self.assertEqual(header_data.get_public_date(), public_date)
 
-    @patch.dict(os.environ, {'PRIVATE_FILE_TYPES': '-t00'})
+    @patch('ocs_archive.input.file.settings.PRIVATE_FILE_TYPES', ('-t00',))
     def test_public_date_private_t00(self):
         tst_file = EmptyFile('whatever-t00.file')
         headers = {
@@ -63,7 +65,7 @@ class TestDataFile(unittest.TestCase):
         header_data = data_file.get_header_data()
         self.assertEqual(header_data.get_public_date(), '3014-08-03T00:00:00+00:00')
 
-    @patch.dict(os.environ, {'PRIVATE_FILE_TYPES': '-x00'})
+    @patch('ocs_archive.input.file.settings.PRIVATE_FILE_TYPES', ('-x00',))
     def test_public_date_private_x00(self):
         tst_file = EmptyFile('whatever-x00.file')
         headers = {
@@ -75,7 +77,7 @@ class TestDataFile(unittest.TestCase):
         header_data = data_file.get_header_data()
         self.assertEqual(header_data.get_public_date(), '3014-08-03T00:00:00+00:00')
 
-    @patch.dict(os.environ, {'PRIVATE_PROPOSALS': 'LCOEngineering'})
+    @patch('ocs_archive.input.file.settings.PRIVATE_PROPOSALS', ('LCOEngineering',))
     def test_public_date_private_LCOEngineering(self):
         headers = {
             'PROPID': 'LCOEngineering',
@@ -96,6 +98,89 @@ class TestDataFile(unittest.TestCase):
         data_file = DataFile(self.file, file_metadata=headers, required_headers=[])
         header_data = data_file.get_header_data()
         self.assertEqual(header_data.get_public_date(), '2099-04-01T00:00:00+00:00')
+
+    @patch('ocs_archive.input.file.settings.PUBLIC_PROPOSALS', ('EPOTHING',))
+    @patch('ocs_archive.input.file.settings.OBSERVATION_PORTAL_BASE_URL', 'https://obs.portal/')
+    @patch('ocs_archive.input.file.settings.OBSERVATION_PORTAL_API_TOKEN', 'asdf')
+    @patch('ocs_archive.input.file.settings.PRIVATE_PROPOSAL_TAGS', ('private',))
+    @responses.activate
+    def test_private_in_portal_overrides_public_environment_variable(self):
+        headers = {
+            'PROPID': 'EPOTHING',
+            'DATE-OBS': '2016-04-01T00:00:00+00:00',
+            'OBSTYPE': 'EXPOSE'
+        }
+        responses.add(responses.GET, 'https://obs.portal/api/proposals/EPOTHING',
+                      json={'tags': ['private']})
+        data_file = DataFile(self.file, file_metadata=headers, required_headers=[])
+        header_data = data_file.get_header_data()
+        self.assertEqual(header_data.get_public_date(), '3014-08-03T00:00:00+00:00')
+
+    @patch('ocs_archive.input.file.settings.OBSERVATION_PORTAL_BASE_URL', 'https://obs.portal/')
+    @patch('ocs_archive.input.file.settings.OBSERVATION_PORTAL_API_TOKEN', 'asdf')
+    @patch('ocs_archive.input.file.settings.PUBLIC_PROPOSAL_TAGS', ('public',))
+    @responses.activate
+    def test_public_in_portal(self):
+        headers = {
+            'PROPID': 'EPOTHING',
+            'DATE-OBS': '2016-04-01T00:00:00+00:00',
+            'OBSTYPE': 'EXPOSE'
+        }
+        responses.add(responses.GET, 'https://obs.portal/api/proposals/EPOTHING',
+                      json={'tags': ['public']})
+        data_file = DataFile(self.file, file_metadata=headers, required_headers=[])
+        header_data = data_file.get_header_data()
+        self.assertEqual(header_data.get_public_date(), header_data.get_observation_date())
+
+    @patch('ocs_archive.input.file.settings.OBSERVATION_PORTAL_BASE_URL', 'https://obs.portal/')
+    @patch('ocs_archive.input.file.settings.OBSERVATION_PORTAL_API_TOKEN', 'asdf')
+    @patch('ocs_archive.input.file.settings.PRIVATE_PROPOSAL_TAGS', ('private',))
+    @responses.activate
+    def test_private_in_portal(self):
+        headers = {
+            'PROPID': 'MyPrivateProposal',
+            'DATE-OBS': '2016-04-01T00:00:00+00:00',
+            'OBSTYPE': 'EXPOSE'
+        }
+        responses.add(responses.GET, 'https://obs.portal/api/proposals/MyPrivateProposal',
+                      json={'tags': ['private']})
+        data_file = DataFile(self.file, file_metadata=headers, required_headers=[])
+        header_data = data_file.get_header_data()
+        self.assertEqual(header_data.get_public_date(), '3014-08-03T00:00:00+00:00')
+
+    @patch('ocs_archive.input.file.settings.PUBLIC_PROPOSALS', ('EPOTHING',))
+    @patch('ocs_archive.input.file.settings.OBSERVATION_PORTAL_BASE_URL', 'https://obs.portal/')
+    @patch('ocs_archive.input.file.settings.OBSERVATION_PORTAL_API_TOKEN', 'asdf')
+    @patch('ocs_archive.input.file.settings.PRIVATE_PROPOSAL_TAGS', ('private',))
+    @responses.activate
+    def test_no_data_privacy_tags_falls_back_to_environment_variables(self):
+        headers = {
+            'PROPID': 'EPOTHING',
+            'DATE-OBS': '2016-04-01T00:00:00+00:00',
+            'OBSTYPE': 'EXPOSE'
+        }
+        responses.add(responses.GET, 'https://obs.portal/api/proposals/EPOTHING',
+                      json={'tags': ['foo']})
+        data_file = DataFile(self.file, file_metadata=headers, required_headers=[])
+        header_data = data_file.get_header_data()
+        self.assertEqual(header_data.get_public_date(), header_data.get_observation_date())
+
+    @patch('ocs_archive.input.file.settings.PUBLIC_PROPOSALS', ('MYPUBLICPROP',))
+    @patch('ocs_archive.input.file.settings.OBSERVATION_PORTAL_BASE_URL', 'https://obs.portal/')
+    @patch('ocs_archive.input.file.settings.OBSERVATION_PORTAL_API_TOKEN', 'asdf')
+    @patch('ocs_archive.input.file.settings.PRIVATE_PROPOSAL_TAGS', ('private',))
+    @responses.activate
+    def test_500_error_fallback_to_environment_variable(self):
+        headers = {
+            'PROPID': 'MYPUBLICPROP',
+            'DATE-OBS': '2016-04-01T00:00:00+00:00',
+            'OBSTYPE': 'EXPOSE'
+        }
+        responses.add(responses.GET, 'https://obs.portal/api/proposals/MYPUBLICPROP',
+                      status=500)
+        data_file = DataFile(self.file, file_metadata=headers, required_headers=[])
+        header_data = data_file.get_header_data()
+        self.assertEqual(header_data.get_public_date(), header_data.get_observation_date())
 
     def test_get_wcs_corners_from_dict_for_ccd(self):
         headers = {'CD1_1': 6, 'CD1_2': 2, 'CD2_1': 3, 'CD2_2': 4, 'NAXIS1': 1000, 'NAXIS2': 1100, 'DATE-OBS': '2015-02-19T13:56:05.261'}

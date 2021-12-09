@@ -28,8 +28,10 @@ setup(
         'astropy',
         'boto3',
         'python-dateutil',
+        'requests==2.26.0'
     ],
     extras_require={
-        'tests': ['pytest']
+        'tests': ['pytest',
+                  'responses==0.16.0']
     }
 )
