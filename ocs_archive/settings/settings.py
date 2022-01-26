@@ -9,7 +9,7 @@ def get_tuple_from_environment(variable_name, default):
 # AWS Credentials and defaults
 BUCKET = os.getenv('BUCKET', 'testbucket')
 S3_SIGNATURE_VERSION = os.getenv('S3_SIGNATURE_VERSION', 's3v4')
-S3_ENDPOINT_URL = os.getenv('S3_ENDPOINT_URL', 'http://s3.us-west-2.amazonaws.com')
+S3_ENDPOINT_URL = os.getenv('S3_ENDPOINT_URL', 'https://s3.us-west-2.amazonaws.com')
 S3_DAYS_TO_IA_STORAGE = int(os.getenv('S3_DAYS_TO_IA_STORAGE', 60))
 
 # Used to specify which type of File Storage to use
@@ -70,7 +70,7 @@ SITE_ID_KEY = os.getenv('SITE_ID_KEY', 'SITEID')
 TELESCOPE_ID_KEY = os.getenv('TELESCOPE_ID_KEY', 'TELID')
 OBSERVATION_ID_KEY = os.getenv('OBSERVATION_ID_KEY', 'BLKUID')
 CONFIGURATION_ID_KEY = os.getenv('CONFIGURATION_ID_KEY', 'MOLUID')
-PRIMARY_FILTER_KEY = os.getenv('PRIMARY_FILTER_KEY', 'FILTER')
+PRIMARY_OPTICAL_ELEMENT_KEY = os.getenv('PRIMARY_OPTICAL_ELEMENT_KEY', 'FILTER')
 TARGET_NAME_KEY = os.getenv('TARGET_NAME_KEY', 'OBJECT')
 REQUEST_ID_KEY = os.getenv('REQUEST_ID_KEY', 'REQNUM')
 REQUESTGROUP_ID_KEY = os.getenv('REQUESTGROUP_ID_KEY', 'TRACKNUM')

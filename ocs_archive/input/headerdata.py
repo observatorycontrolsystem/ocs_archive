@@ -31,7 +31,7 @@ class HeaderData:
             'site_id': self.get_site_id(),
             'telescope_id': self.get_telescope_id(),
             'exposure_time': self.get_exposure_time(),
-            'primary_filter': self.get_primary_filter(),
+            'primary_optical_element': self.get_primary_optical_element(),
             'public_date': self.get_public_date(),
             'configuration_type': self.get_configuration_type(),
             'observation_id': self.get_observation_id(),
@@ -85,8 +85,8 @@ class HeaderData:
     def get_site_id(self):
         return self.get_headers().get(settings.SITE_ID_KEY)
 
-    def get_primary_filter(self):
-        return self.get_headers().get(settings.PRIMARY_FILTER_KEY)
+    def get_primary_optical_element(self):
+        return self.get_headers().get(settings.PRIMARY_OPTICAL_ELEMENT_KEY)
 
     def get_target_name(self):
         return self.get_headers().get(settings.TARGET_NAME_KEY)
