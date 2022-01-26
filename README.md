@@ -61,7 +61,7 @@ Add the `ocs_archive` package to your python environment:
 |                | `TELESCOPE_ID_KEY` | The key in which to find the telescope ID in the header data | `TELID` |
 |                | `OBSERVATION_ID_KEY` | The key in which to find the observation ID in the header data | `BLKUID` |
 |                | `CONFIGURATION_ID_KEY` | The key in which to find the configuration ID in the header data | `MOLUID` |
-|                | `PRIMARY_FILTER_KEY` | The key in which to find the primary filter value in the header data | `FILTER` |
+|                | `PRIMARY_OPTICAL_ELEMENT_KEY` | The key in which to find the primary filter value in the header data | `FILTER` |
 |                | `TARGET_NAME_KEY` | The key in which to find the target object's name in the header data | `OBJECT` |
 |                | `REQUEST_ID_KEY` | The key in which to find the request ID in the header data | `REQNUM` |
 |                | `REQUESTGROUP_ID_KEY` | The key in which to find the request group ID in the header data | `TRACKNUM` |
