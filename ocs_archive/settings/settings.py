@@ -25,7 +25,7 @@ OBSERVATION_PORTAL_API_TOKEN = os.getenv('OBSERVATION_PORTAL_API_TOKEN')
 
 # Used to specify the proposal tags that denote whether the data from a proposal should be public or private
 PRIVATE_PROPOSAL_TAGS = get_tuple_from_environment('PRIVATE_PROPOSAL_TAGS', 'private,internal')
-PUBLIC_PROPOSAL_TAGS = get_tuple_from_environment('PRIVATE_PROPOSAL_TAGS', 'public')
+PUBLIC_PROPOSAL_TAGS = get_tuple_from_environment('PUBLIC_PROPOSAL_TAGS', 'public')
 
 # Used to override and update mapping of file extensions to DataFile subclass class dotpath
 # The expected format is a string literal representation of a dictionary, mapping extensions

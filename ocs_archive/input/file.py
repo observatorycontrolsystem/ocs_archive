@@ -103,7 +103,7 @@ class DataFile:
         self._repair_public_date()
 
     @property
-    @lru_cache()
+    @lru_cache(maxsize=1000)
     def proposal_tags(self):
         """Return the tags associated with a proposal in the Observation Portal."""
         # If the observation portal connection isn't configured, don't try and fetch proposal tags
