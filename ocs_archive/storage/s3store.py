@@ -74,11 +74,11 @@ class S3Store(FileStore):
         :param path: s3 path for file
         """
         client = self.get_s3_client()
-        client.delete_object({
-            'Bucket': self.bucket,
-            'Key': path,
-            'VersionId': version_id
-        })
+        client.delete_object(
+            Bucket=self.bucket,
+            Key=path,
+            VersionId=version_id
+        )
 
     def get_url(self, path: str, version_id: str, expiration: float):
         """
