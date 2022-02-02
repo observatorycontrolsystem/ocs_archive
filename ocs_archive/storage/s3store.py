@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 import logging
 from io import BytesIO
+from functools import lru_cache
 from contextlib import contextmanager
 
 from dateutil.parser import parse
@@ -25,8 +26,10 @@ class S3Store(FileStore):
         super().__init__()
         self.bucket = bucket
 
-    def get_s3_client(self):
-        config = boto3.session.Config(signature_version=settings.S3_SIGNATURE_VERSION)
+    @classmethod
+    @lru_cache(maxsize=1)
+    def get_s3_client(cls):
+        config = boto3.session.Config(signature_version=settings.S3_SIGNATURE_VERSION, s3={'addressing_style': 'virtual'})
         return boto3.client('s3', endpoint_url=settings.S3_ENDPOINT_URL, config=config)
 
     def get_storage_class(self, observation_date):
@@ -73,7 +76,7 @@ class S3Store(FileStore):
 
         :param path: s3 path for file
         """
-        client = self.get_s3_client()
+        client = S3Store.get_s3_client()
         client.delete_object(
             Bucket=self.bucket,
             Key=path,
@@ -86,7 +89,7 @@ class S3Store(FileStore):
 
         :param path: s3 path for file
         """
-        client = self.get_s3_client()
+        client = S3Store.get_s3_client()
         return client.generate_presigned_url(
             'get_object',
             ExpiresIn=expiration,
@@ -108,7 +111,7 @@ class S3Store(FileStore):
         :param data_file: DataFile with filled in headers pointing to storage path
         :return: File-like object
         """
-        client = self.get_s3_client()
+        client = S3Store.get_s3_client()
         fileobj = BytesIO()
         client.download_fileobj(Bucket=self.bucket,
                                 Key=path,
@@ -126,5 +129,5 @@ class S3Store(FileStore):
         :param path: s3 path for file
         :return: file size in bytes
         """
-        client = self.get_s3_client()
+        client = S3Store.get_s3_client()
         return client.head_object(Bucket=self.bucket, Key=path)['ContentLength']
