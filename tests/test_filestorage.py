@@ -79,24 +79,28 @@ class TestS3Store(unittest.TestCase):
 
     @patch('boto3.client', side_effect=mocked_boto3_client)
     def test_get_file(self, boto3_mock):
+        S3Store.get_s3_client.cache_clear()
         with self.s3.get_fileobj('special/dir/thing.fits.fz') as fileobj:
             self.assertTrue(boto3_mock.called)
             self.assertEqual(fileobj.name, 'thing.fits.fz')
 
     @patch('boto3.client', side_effect=mocked_boto3_client)
     def test_get_file_size(self, boto3_mock):
+        S3Store.get_s3_client.cache_clear()
         filesize = self.s3.get_file_size('thing.fits.fz')
         self.assertTrue(boto3_mock.called)
         self.assertEqual(filesize, 10)
 
     @patch('boto3.client', side_effect=mocked_boto3_client)
     def test_get_url(self, boto3_mock):
+        S3Store.get_s3_client.cache_clear()
         url = self.s3.get_url('thing.fits.fz', '', 0)
         self.assertTrue(boto3_mock.called)
         self.assertEqual(url, 's3://somebucket/thing.fits.fz')
 
     @patch('boto3.client', side_effect=mocked_boto3_client)
     def test_delete_file(self, boto3_mock):
+        S3Store.get_s3_client.cache_clear()
         self.s3.delete_file('thing.fits.fz', '')
         self.assertTrue(boto3_mock.called)
 

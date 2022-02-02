@@ -1,4 +1,4 @@
-0.2.5
+0.2.6
 2022-02-01
 
 Cache the s3 client and force virtual style s3 urls
