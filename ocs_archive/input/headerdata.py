@@ -86,7 +86,7 @@ class HeaderData:
         return self.get_headers().get(settings.SITE_ID_KEY)
 
     def get_primary_optical_element(self):
-        return self.get_headers().get(settings.PRIMARY_OPTICAL_ELEMENT_KEY)
+        return self.get_headers().get(settings.PRIMARY_OPTICAL_ELEMENT_KEY, '')
 
     def get_target_name(self):
         return self.get_headers().get(settings.TARGET_NAME_KEY)

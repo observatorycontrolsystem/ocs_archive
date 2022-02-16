@@ -99,8 +99,8 @@ class LcoFitsFile(FitsFile):
         headers = self.header_data.get_headers()
         if self.header_data.get_configuration_type() == 'BPM' or headers.get('EXTNAME') == 'BPM':
             return True
-        self.open_file.basename = self.open_file.basename.replace('_', '-')
-        if self.open_file.basename.startswith('bpm-') or '-bpm-' in self.open_file.basename or self.open_file.basename.endswith('-bpm'):
+        test_filename = self.open_file.basename.replace('_', '-')
+        if test_filename.startswith('bpm-') or '-bpm-' in test_filename or test_filename.endswith('-bpm'):
             return True
         return False
 
