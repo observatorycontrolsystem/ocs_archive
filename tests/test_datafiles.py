@@ -182,6 +182,13 @@ class TestDataFile(unittest.TestCase):
         header_data = data_file.get_header_data()
         self.assertEqual(header_data.get_public_date(), header_data.get_observation_date())
 
+    def test_get_wcs_corners_with_malformed_headers(self):
+        with open(os.path.join(FITS_PATH, 'elpnrs02-fa17-20220219-0039-b00.fits.fz'), 'rb') as fp:
+            b00_file = File(fp, 'elpnrs02-fa17-20220219-0039-b00.fits.fz')
+            data_file = LcoFitsFile(b00_file)
+            wcs = data_file.get_wcs_corners()
+            self.assertIsNone(wcs)
+
     def test_get_wcs_corners_from_dict_for_ccd(self):
         headers = {'CD1_1': 6, 'CD1_2': 2, 'CD2_1': 3, 'CD2_2': 4, 'NAXIS1': 1000, 'NAXIS2': 1100, 'DATE-OBS': '2015-02-19T13:56:05.261'}
         data_file = DataFile(self.file, file_metadata=headers, required_headers=[])
