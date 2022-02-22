@@ -205,7 +205,7 @@ class DataFile:
         It will search for the standard header keys to build a polygon fov.
         """
         headers = self.header_data.get_headers()
-        if settings.RADIUS_KEY in headers and settings.RA_KEY in headers and settings.DEC_KEY in headers:
+        if self.header_data.headers_are_set([settings.RADIUS_KEY, settings.RA_KEY, settings.DEC_KEY]):
             ra = headers[settings.RA_KEY]
             dec = headers[settings.DEC_KEY]
             r = headers[settings.RADIUS_KEY]
