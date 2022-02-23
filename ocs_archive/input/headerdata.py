@@ -65,10 +65,10 @@ class HeaderData:
         return self.get_headers().get(settings.OBSERVATION_DATE_KEY)
 
     def get_proposal_id(self):
-        return self.get_headers().get(settings.PROPOSAL_ID_KEY)
+        return self.get_headers().get(settings.PROPOSAL_ID_KEY, '')
 
     def get_configuration_type(self):
-        return self.get_headers().get(settings.CONFIGURATION_TYPE_KEY)
+        return self.get_headers().get(settings.CONFIGURATION_TYPE_KEY, '')
 
     def get_exposure_time(self):
         return self.get_headers().get(settings.EXPOSURE_TIME_KEY)
@@ -80,19 +80,19 @@ class HeaderData:
         return self.get_headers().get(settings.REDUCTION_LEVEL_KEY, 0)
 
     def get_instrument_id(self):
-        return self.get_headers().get(settings.INSTRUMENT_ID_KEY)
+        return self.get_headers().get(settings.INSTRUMENT_ID_KEY, '')
 
     def get_site_id(self):
-        return self.get_headers().get(settings.SITE_ID_KEY)
+        return self.get_headers().get(settings.SITE_ID_KEY, '')
 
     def get_primary_optical_element(self):
         return self.get_headers().get(settings.PRIMARY_OPTICAL_ELEMENT_KEY, '')
 
     def get_target_name(self):
-        return self.get_headers().get(settings.TARGET_NAME_KEY)
+        return self.get_headers().get(settings.TARGET_NAME_KEY, '')
 
     def get_telescope_id(self):
-        return self.get_headers().get(settings.TELESCOPE_ID_KEY)
+        return self.get_headers().get(settings.TELESCOPE_ID_KEY, '')
 
     def get_observation_id(self):
         return self.get_headers().get(settings.OBSERVATION_ID_KEY)
