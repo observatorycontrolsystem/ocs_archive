@@ -10,7 +10,11 @@ A base library for the Science Archive and Ingester library to support generaliz
 
 Optional prerequisites may be skipped for reduced functionality.
 
--   Python >= 3.6
+-   Python >= 3.7
+
+## Usage
+
+This library is used with the OCS [Science Archive](https://github.com/observatorycontrolsystem/science-archive/) and OCS [Ingester library](https://github.com/observatorycontrolsystem/ingester). It has built in support for .fits files, compressed .fits files, or custom files if the metadata is supplied separately. To support .fits files, it is critical that the environment variables below are set up to map to the proper .fits header keys in your data product, so that the information can be automatically extracted and stored in the Science Archive. For more information on how to customize your OCS Science Archive, please review the [data flow documentation](https://observatorycontrolsystem.github.io/integration/data_flow/).
 
 ## Installation
 
@@ -80,7 +84,7 @@ The library is designed to be configured mostly through environment variables, b
 
 ### File Storage Format Configuration
 
-The library supports three types of file storage by default, that can be selected via environment variable. The `dummy` type is just used for testing and development and doesn't actually store any file. The `local` storage just saves the files into a locally mounted directory. It requires you to run a separate file server on that directory so it knows how to direct links to download the files. This can be accomplished as simply as running `python -m http.server --directory=/my/root/dir`. It could alternatively be served using any other file server, like node's http-server. The third option is `s3`, and expects to connect to Amazon's S3 or something with that same interface like minio. S3 file storage requires `BUCKET`, `AWS_*`, and `S3_*` environment variables to be set. More storage types can be added via forking the library and subclassing the `FileStore` class.
+The library supports three types of file storage by default, that can be selected via environment variable. The `dummy` type is just used for testing and development and doesn't actually store any file. The `local` storage just saves the files into a locally mounted directory. It requires you to run a separate file server on that directory so it knows how to direct links to download the files. This can be accomplished as simply as running `python -m http.server --directory=/my/root/dir`. It could alternatively be served using any other file server, like node's http-server. The third option is `s3`, and expects to connect to Amazon's S3 or something with that same interface like minio. S3 file storage requires `BUCKET`, `AWS_*`, and `S3_*` environment variables to be set. More storage types can be added via forking the library and subclassing the `FileStore` class. S3 storage is the preffered method for a production and public facing archive, since it is the only option to support versioning and secure data access by generating presigned data urls.
 
 ## Development
 

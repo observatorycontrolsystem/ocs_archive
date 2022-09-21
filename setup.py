@@ -14,7 +14,7 @@ setup(
     long_description_content_type='text/markdown',
     url='https://github.com/observatorycontrolsystem/ocs_archive',
     packages=['ocs_archive', 'ocs_archive.input', 'ocs_archive.settings', 'ocs_archive.storage'],
-    python_requires='>=3.6',
+    python_requires='>=3.7',
     classifiers=[
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Development Status :: 3 - Alpha',
@@ -28,7 +28,7 @@ setup(
         'astropy',
         'boto3',
         'python-dateutil',
-        'requests==2.26.0'
+        'requests==2.28.1'
     ],
     extras_require={
         'tests': ['pytest',
