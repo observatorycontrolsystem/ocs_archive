@@ -1,10 +1,30 @@
 [tool.poetry]
 name = "ocs-archive"
-version = "0.2.9"
+version = "0.2.10"
 description = "Base library for the science archive and ingester of an observatory control system"
-authors = ["Your Name <you@example.com>"]
-license = "GNU General Public License v3 (GPLv3)"
+authors = ["Observatory Control System Project <ocs@lco.global>"]
+license = "GPL-3.0-only"
 readme = "README.md"
+homepage = "https://observatorycontrolsystem.github.io"
+repository = "https://github.com/observatorycontrolsystem/ocs_archive"
+keywords = [
+    "observations",
+    "astronomy",
+    "astrophysics",
+    "cosmology",
+    "science",
+]
+classifiers=[
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Scientific/Engineering :: Astronomy",
+    "Topic :: Scientific/Engineering :: Physics"
+]
 
 [tool.poetry.dependencies]
 python = ">=3.8"
