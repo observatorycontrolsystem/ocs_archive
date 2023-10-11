@@ -10,7 +10,7 @@ A base library for the Science Archive and Ingester library to support generaliz
 
 Optional prerequisites may be skipped for reduced functionality.
 
--   Python >= 3.7
+-   Python >= 3.8
 
 ## Usage
 
@@ -88,11 +88,30 @@ The library supports three types of file storage by default, that can be selecte
 
 ## Development
 
-### Running the Tests
+### **Poetry**
 
-After cloning this project, from the project root and inside your virtual environment:
+We use Poetry for package management. If you already have Poetry installed, you
+can skip this section.
 
-```bash
-(venv) $ pip install -e .[tests]
-(venv) $ pytest
+You can install Poetry using one of the many options listed at https://python-poetry.org/docs/#installation.
+One simple option is using Pipx:
+
+    python3 -m pip install --user pipx
+    python3 -m pipx ensurepath
+    pipx install poetry
+
+### **Install**
+
+Install the project and its Python dependencies:
+
+    poetry install
+
+This will install the project in a Poetry managed virtual environment. To run
+commands in that environment either use `poetry run ...` or start a shell in
+that environment with `poetry shell`
+
+### **Test**
+
+```
+poetry run pytest
 ```
