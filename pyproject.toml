@@ -30,7 +30,7 @@ classifiers=[
 python = ">=3.8"
 astropy = ">=3,<6"
 boto3 = ">=1,<2"
-requests = ">=2.31,<3"
+requests = ">=2,<3"
 python-dateutil = ">=2,<3"
 
 [tool.poetry.group.dev.dependencies]
