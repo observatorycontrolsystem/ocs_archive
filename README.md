@@ -42,6 +42,7 @@ Add the `ocs_archive` package to your python environment:
 |     | `AWS_ACCESS_KEY_ID` | If using `s3` file storage; AWS Access Key with write access to the S3 bucket | _empty string_ |
 |     | `AWS_SECRET_ACCESS_KEY` | If using `s3` file storage; AWS Secret Access Key | _empty string_ |
 |     | `AWS_DEFAULT_REGION` | If using `s3` file storage; AWS S3 Default Region | _empty string_ |
+|     | `S3_ADDRESSING_STYLE` | If using `s3` file storage; Sets the addressing_style for generated s3 paths. Can be one of `virtual`, `path`, or `auto`. | `virtual` |
 |     | `S3_ENDPOINT_URL` | If using `s3` file storage; Endpoint url for connecting to s3. This can be modified to connect to a local instance of s3. | `"http://s3.us-west-2.amazonaws.com"` |
 |     | `S3_DAYS_TO_IA_STORAGE` | If using `s3` file storage, this is the age in days after which data will be ingested directly to Infrequent Access (IA) storage vs normal storage. | 60 |
 | DataFile | `FILETYPE_MAPPING_OVERRIDES` | A string literal representation of a python dictionary containing a mapping of file extensions to dotpaths to python Classes which subclass the DataFile class. This appends and overrides the default list in the FileFactory class. | `"{}"` |

@@ -1,3 +1,9 @@
+0.3.0
+2024-01-29
+
+Added environment variable S3_ADDRESSING_STYLE defaulting to 'virtual' to allow an 
+override of the style to 'path' for certain minio S3-like deployments to use.
+
 0.2.9
 2022-02-23
 

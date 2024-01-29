@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ocs-archive"
-version = "0.2.10"
+version = "0.3.0"
 description = "Base library for the science archive and ingester of an observatory control system"
 authors = ["Observatory Control System Project <ocs@lco.global>"]
 license = "GPL-3.0-only"

@@ -29,8 +29,11 @@ class S3Store(FileStore):
     @classmethod
     @lru_cache(maxsize=1)
     def get_s3_client(cls):
-        config = boto3.session.Config(signature_version=settings.S3_SIGNATURE_VERSION, s3={'addressing_style': 'virtual'})
-        return boto3.client('s3', endpoint_url=settings.S3_ENDPOINT_URL, config=config)
+        config = boto3.session.Config(signature_version=settings.S3_SIGNATURE_VERSION, s3={'addressing_style': settings.S3_ADDRESSING_STYLE})
+        if settings.S3_ADDRESSING_STYLE == 'path':
+            return boto3.client('s3', settings.AWS_DEFAULT_REGION, endpoint_url=settings.S3_ENDPOINT_URL, config=config)
+        else:
+            return boto3.client('s3', endpoint_url=settings.S3_ENDPOINT_URL, config=config)
 
     def get_storage_class(self, observation_date):
         # if the observation was more than X days ago, this is someone

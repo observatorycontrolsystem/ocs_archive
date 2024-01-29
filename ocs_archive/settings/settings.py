@@ -11,6 +11,9 @@ BUCKET = os.getenv('BUCKET', 'testbucket')
 S3_SIGNATURE_VERSION = os.getenv('S3_SIGNATURE_VERSION', 's3v4')
 S3_ENDPOINT_URL = os.getenv('S3_ENDPOINT_URL', 'https://s3.us-west-2.amazonaws.com')
 S3_DAYS_TO_IA_STORAGE = int(os.getenv('S3_DAYS_TO_IA_STORAGE', 60))
+# If S3_ADDRESSING_STYLE is set to path, you must set AWS_DEFAULT_REGION too
+S3_ADDRESSING_STYLE = os.getenv('S3_ADDRESSING_STYLE', 'virtual')
+AWS_DEFAULT_REGION = os.getenv('AWS_DEFAULT_REGION', '')
 
 # Used to specify which type of File Storage to use
 FILESTORE_TYPE = os.getenv('FILESTORE_TYPE', 'dummy')
