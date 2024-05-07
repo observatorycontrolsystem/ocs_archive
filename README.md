@@ -76,6 +76,7 @@ Add the `ocs_archive` package to your python environment:
 |                | `CATALOG_TARGET_FRAME_KEY` | The key in which to find the base filename of the catalog file for the target of this observation in the header data | `L1IDCAT` |
 |                | `PUBLIC_DATE_KEY` | The key in which to find the iso formatted date in which this data should become available to the public in the header data | `L1PUBDAT` |
 |                | `RELATED_FRAME_KEYS` | A comma delimited list of keys in the header data to look for related frame base filenames for this observation | `L1IDBIAS,L1IDDARK,L1IDFLAT,L1IDSHUT,L1IDMASK,L1IDFRNG,L1IDCAT,L1IDARC,L1ID1D,L1ID2D,L1IDSUM,TARFILE,ORIGNAME,ARCFILE,FLATFILE,GUIDETAR` |
+|                | `THUMBNAIL_FRAME_FILENAME_KEY` | The key used to store the original frame (e.g. FITS image) filename for the associated thumbnail | `frame_filename` |
 |                | `RADIUS_KEY` | The key in which to find FOV radius for a circular FOV, used to calculate WCS polygon if specified. Unit of arcseconds | `RADIUS` |
 |                | `RA_KEY` | The key in which to find FOV center RA for a circular FOV, used to calculate WCS polygon if specified. Unit of hour angle | `RA` |
 |                | `DEC_KEY` | The key in which to find FOV center DEC for a circular FOV, used to calculate WCS polygon if specified. Unit of decimal degrees | `DEC` |

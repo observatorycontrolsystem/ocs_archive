@@ -137,7 +137,7 @@ class DataFile:
             self.header_data = HeaderData(file_metadata)
             return
         # Missing one or more required headers in the input file_metadata
-        raise FileSpecificationException('Could not find required keywords in headers!')
+        raise FileSpecificationException(f'Could not find required keywords in headers! If this is a thumbnail, make sure {settings.REQUIRED_THUMBNAIL_METADATA} keys are set.')
 
     def get_header_data(self):
         # This should return the header values you want to store in the archive.
@@ -187,6 +187,9 @@ class DataFile:
         :param metadata_dict: dictionary of file metadata
         :return True if required headers are present, False if not
         """
+        if self.open_file.extension in settings.THUMBNAIL_FILETYPES:
+            if any([k for k in settings.REQUIRED_THUMBNAIL_METADATA if k not in metadata_dict]):
+                return False
         if any([k for k in self.required_headers if k not in metadata_dict]):
             return False
         else:
