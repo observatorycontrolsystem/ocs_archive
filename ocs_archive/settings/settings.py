@@ -48,7 +48,7 @@ HEADER_BLACKLIST = get_tuple_from_environment('HEADER_BLACKLIST', 'HISTORY,COMME
 REQUIRED_HEADERS = get_tuple_from_environment('REQUIRED_HEADERS', 'PROPID,DATE-OBS,INSTRUME,SITEID,TELID,OBSTYPE,BLKUID')
 
 # Metadata that must be present when ingesting a thumbnail
-REQUIRED_THUMBNAIL_METADATA = get_tuple_from_environment('REQUIRED_THUMBNAIL_METADATA', 'frame_filename,size')
+REQUIRED_THUMBNAIL_METADATA = get_tuple_from_environment('REQUIRED_THUMBNAIL_METADATA', 'frame_basename,size')
 
 # Possible Null values in headers. These will be normalized to none / empty
 NULL_HEADER_VALUES = get_tuple_from_environment('NULL_HEADER_VALUES', 'N/A,UNSPECIFIED,UNKNOWN')
@@ -91,7 +91,7 @@ RELATED_FRAME_KEYS = get_tuple_from_environment(
     'RELATED_FRAME_KEYS',
     'L1IDBIAS,L1IDDARK,L1IDFLAT,L1IDSHUT,L1IDMASK,L1IDFRNG,L1IDCAT,L1IDARC,L1ID1D,L1ID2D,L1IDSUM,TARFILE,ORIGNAME,ARCFILE,FLATFILE,GUIDETAR'
 )
-THUMBNAIL_FRAME_FILENAME_KEY = os.getenv('THUMBNAIL_FRAME_FILENAME_KEY', 'frame_filename')
+THUMBNAIL_FRAME_BASENAME_KEY = os.getenv('THUMBNAIL_FRAME_BASENAME_KEY', 'frame_basename')
 THUMBNAIL_SIZE_KEY = os.getenv('THUMBNAIL_SIZE_KEY', 'size')
 # Either Radius, Ra, Dec or NAXIS1/2 and CD1/2_1/2 need to be set to support
 # automatic extraction of wcs polygon

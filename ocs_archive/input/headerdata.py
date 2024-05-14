@@ -108,7 +108,7 @@ class HeaderData:
         return self.get_headers().get(settings.REQUESTGROUP_ID_KEY)
     
     def get_frame_basename(self):
-        return self.get_headers().get(settings.THUMBNAIL_FRAME_FILENAME_KEY, '').split('.')[0]
+        return self.get_headers().get(settings.THUMBNAIL_FRAME_BASENAME_KEY)
     
     def get_size(self):
         return self.get_headers().get(settings.THUMBNAIL_SIZE_KEY, '')
