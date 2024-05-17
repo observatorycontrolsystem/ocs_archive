@@ -35,9 +35,6 @@ PUBLIC_PROPOSAL_TAGS = get_tuple_from_environment('PUBLIC_PROPOSAL_TAGS', 'publi
 # to Datafile subclass absolute dotpath
 FILETYPE_MAPPING_OVERRIDES = ast.literal_eval(os.getenv('FILETYPE_MAPPING_OVERRIDES', "{}"))
 
-# Filetypes we wish to store as thumbnails in the archive
-THUMBNAIL_FILETYPES = get_tuple_from_environment('THUMBNAIL_FILE_TYPE_EXTENSIONS', '.jpg,.jpeg')
-
 # Files we wish to ignore
 IGNORED_CHARS = get_tuple_from_environment('IGNORED_CHARS', '-l00,tstnrs')
 

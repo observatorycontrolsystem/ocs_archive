@@ -46,7 +46,6 @@ Add the `ocs_archive` package to your python environment:
 |     | `S3_ENDPOINT_URL` | If using `s3` file storage; Endpoint url for connecting to s3. This can be modified to connect to a local instance of s3. | `"http://s3.us-west-2.amazonaws.com"` |
 |     | `S3_DAYS_TO_IA_STORAGE` | If using `s3` file storage, this is the age in days after which data will be ingested directly to Infrequent Access (IA) storage vs normal storage. | 60 |
 | DataFile | `FILETYPE_MAPPING_OVERRIDES` | A string literal representation of a python dictionary containing a mapping of file extensions to dotpaths to python Classes which subclass the DataFile class. This appends and overrides the default list in the FileFactory class. | `"{}"` |
-|          | `THUMBNAIL_FILETYPES` | Comma delimited string list of filetypes to treat as thumbnails in the Science Archive and Ingester | `.jpg,.jpeg` |
 |          | `HEADER_BLACKLIST` | Comma delimited string list of header values that should be removed from the data before storage in the archive. This can be overriden when instantiating a DataFile as well as via environment variable. | `HISTORY,COMMENT` |
 |          | `REQUIRED_HEADERS` | Comma delimited string list of header values that must be present in the DataFile. This can be overriden when instantiating a DataFile as well as via environment variable |
 |          | `NULL_HEADER_VALUES` | Comma delimited string list of header values that should be turned into `None` or empty keys. This only applies to the FitsFile class. | `N/A,UNSPECIFIED,UNKNOWN` |
