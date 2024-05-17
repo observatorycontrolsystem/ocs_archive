@@ -11,6 +11,7 @@ from ocs_archive.input.fitsfile import FitsFile
 from ocs_archive.input.filefactory import FileFactory
 from ocs_archive.input.lcofitsfile import LcoFitsFile
 from ocs_archive.input.tarwithfitsfile import TarWithFitsFile
+from ocs_archive.input.thumbnailfile import ThumbnailFile
 from ocs_archive.settings import settings
 
 
@@ -242,6 +243,20 @@ class TestDataFile(unittest.TestCase):
     def test_base_extension_to_content_type(self):
         data_file = DataFile(self.file, file_metadata={'DATE-OBS': '2015-02-19T13:56:05.261'}, required_headers=[])
         self.assertEqual('', data_file.get_filestore_content_type())
+
+    def test_thumbnail_path_to_filestore_path(self):
+        headers = {'SITEID': 'cpt', 'INSTRUME': 'nres03', 'DATE-OBS': '2015-02-19T13:56:05.261', 'size': 'small', 'frame_basename': 'test'}
+        jpg_file = EmptyFile('test.jpg')
+        thumbnail_file = ThumbnailFile(jpg_file, file_metadata=headers, required_headers=[])
+        self.assertEqual(
+            'cpt/nres03/20150219/thumbnails/test.jpg',
+            thumbnail_file.get_filestore_path()
+        )
+
+    def test_jpg_extension_to_content_type(self):
+        jpg_file = EmptyFile('test.jpg')
+        thumbnail_file = ThumbnailFile(jpg_file, file_metadata={'DATE-OBS': '2015-02-19T13:56:05.261', 'size': 'small', 'frame_basename': 'test'}, required_headers=[])
+        self.assertEqual('image/jpg', thumbnail_file.get_filestore_content_type())
 
 
 class TestFits(unittest.TestCase):
