@@ -42,10 +42,10 @@ IGNORED_CHARS = get_tuple_from_environment('IGNORED_CHARS', '-l00,tstnrs')
 HEADER_BLACKLIST = get_tuple_from_environment('HEADER_BLACKLIST', 'HISTORY,COMMENT')
 
 # Fits headers that must be present
-REQUIRED_HEADERS = get_tuple_from_environment('REQUIRED_HEADERS', 'PROPID,DATE-OBS,INSTRUME,SITEID,TELID,OBSTYPE,BLKUID')
+REQUIRED_HEADERS = get_tuple_from_environment('REQUIRED_HEADERS', 'PROPID,DATE-OBS,DAY-OBS,INSTRUME,SITEID,TELID,OBSTYPE,BLKUID')
 
 # Metadata that must be present when ingesting a thumbnail
-REQUIRED_THUMBNAIL_METADATA = get_tuple_from_environment('REQUIRED_THUMBNAIL_METADATA', 'frame_basename,size')
+REQUIRED_THUMBNAIL_METADATA = get_tuple_from_environment('REQUIRED_THUMBNAIL_METADATA', 'frame_basename,size,DATE-OBS,DAY-OBS,INSTRUME,SITEID,TELID')
 
 # Possible Null values in headers. These will be normalized to none / empty
 NULL_HEADER_VALUES = get_tuple_from_environment('NULL_HEADER_VALUES', 'N/A,UNSPECIFIED,UNKNOWN')

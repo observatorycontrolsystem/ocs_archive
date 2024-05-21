@@ -245,7 +245,7 @@ class TestDataFile(unittest.TestCase):
         self.assertEqual('', data_file.get_filestore_content_type())
 
     def test_thumbnail_path_to_filestore_path(self):
-        headers = {'SITEID': 'cpt', 'INSTRUME': 'nres03', 'DATE-OBS': '2015-02-19T13:56:05.261', 'size': 'small', 'frame_basename': 'test'}
+        headers = {'SITEID': 'cpt', 'INSTRUME': 'nres03', 'DATE-OBS': '2015-02-19T13:56:05.261', 'size': 'small', 'frame_basename': 'test', 'DAY-OBS': '20150219', 'TELID': '1m0a'}
         jpg_file = EmptyFile('test.jpg')
         thumbnail_file = ThumbnailFile(jpg_file, file_metadata=headers, required_headers=[])
         self.assertEqual(
@@ -255,7 +255,7 @@ class TestDataFile(unittest.TestCase):
 
     def test_jpg_extension_to_content_type(self):
         jpg_file = EmptyFile('test.jpg')
-        thumbnail_file = ThumbnailFile(jpg_file, file_metadata={'DATE-OBS': '2015-02-19T13:56:05.261', 'size': 'small', 'frame_basename': 'test'}, required_headers=[])
+        thumbnail_file = ThumbnailFile(jpg_file, file_metadata={'SITEID': 'cpt', 'INSTRUME': 'nres03', 'DATE-OBS': '2015-02-19T13:56:05.261', 'size': 'small', 'frame_basename': 'test', 'DAY-OBS': '20150219', 'TELID': '1m0a'}, required_headers=[])
         self.assertEqual('image/jpg', thumbnail_file.get_filestore_content_type())
 
 
