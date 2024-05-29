@@ -13,7 +13,7 @@ class ThumbnailFile(DataFile):
     def get_filestore_path_from_frame_metadata(site_id: str, instrument_id: str, observation_day: str, filename: str):
         """
         Used to generate a filestore path from minimal frame metadata. This is useful when the full header information
-        is not readily available.q
+        is not readily available.
         """
         return '/'.join((site_id, instrument_id, observation_day, 'thumbnails', filename))
 
