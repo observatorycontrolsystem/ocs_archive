@@ -250,7 +250,7 @@ class TestDataFile(unittest.TestCase):
         thumbnail_file = ThumbnailFile(jpg_file, file_metadata=headers, required_headers=[])
         self.assertEqual(
             'cpt/nres03/20150219/thumbnails/test.jpg',
-            thumbnail_file.get_filestore_path()
+            thumbnail_file.get_filestore_path(site_id=headers['SITEID'], instrument_id=headers['INSTRUME'], observation_day=headers['DAY-OBS'], filename='test.jpg')
         )
 
     def test_jpg_extension_to_content_type(self):
