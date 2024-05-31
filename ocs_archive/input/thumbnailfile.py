@@ -6,17 +6,8 @@ class ThumbnailFile(DataFile):
     """The ThumbnailFile class is a subclass of DataFile that is used to store thumbnail images in an OCS Archive."""
     
     def get_filestore_path(self):
-        return self.get_filestore_path_from_frame_metadata(self.header_data.get_site_id(), self.header_data.get_instrument_id(), 
-                                                           self.header_data.get_observation_day(), self.open_file.basename + self.open_file.extension)
+        return '/'.join((self.header_data.get_site_id(), self.header_data.get_instrument_id(), self.header_data.get_observation_day(), 'thumbnails', self.open_file.basename + self.open_file.extension))
     
-    @staticmethod
-    def get_filestore_path_from_frame_metadata(site_id: str, instrument_id: str, observation_day: str, filename: str):
-        """
-        Used to generate a filestore path from minimal frame metadata. This is useful when the full header information
-        is not readily available.
-        """
-        return '/'.join((site_id, instrument_id, observation_day, 'thumbnails', filename))
-
     def get_filestore_content_type(self):
         return f'image/{self.open_file.extension[1:]}'
     
