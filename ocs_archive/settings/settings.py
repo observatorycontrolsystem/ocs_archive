@@ -90,6 +90,8 @@ RELATED_FRAME_KEYS = get_tuple_from_environment(
 )
 THUMBNAIL_FRAME_BASENAME_KEY = os.getenv('THUMBNAIL_FRAME_BASENAME_KEY', 'frame_basename')
 THUMBNAIL_SIZE_KEY = os.getenv('THUMBNAIL_SIZE_KEY', 'size')
+# Integer type header keywords
+INTEGER_TYPES = [REQUEST_ID_KEY, REQUESTGROUP_ID_KEY, OBSERVATION_ID_KEY, CONFIGURATION_ID_KEY]
 # Either Radius, Ra, Dec or NAXIS1/2 and CD1/2_1/2 need to be set to support
 # automatic extraction of wcs polygon
 RADIUS_KEY = os.getenv('RADIUS_KEY', 'RADIUS')
