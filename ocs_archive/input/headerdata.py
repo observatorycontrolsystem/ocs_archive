@@ -1,6 +1,5 @@
 from ocs_archive.settings import settings
 
-
 class HeaderData:
     def __init__(self, header_data: dict = None):
         """Creates HeaderData with input dictionary of headers."""
@@ -36,7 +35,9 @@ class HeaderData:
             'configuration_type': self.get_configuration_type(),
             'observation_id': self.get_observation_id(),
             'request_id': self.get_request_id(),
-            'related_frame_filenames': list(self.get_related_frames().values())
+            'related_frame_filenames': list(self.get_related_frames().values()),
+            'frame_basename': self.get_frame_basename(),
+            'size': self.get_size()
         }
 
     def headers_are_set(self, keys: list):
@@ -105,3 +106,9 @@ class HeaderData:
 
     def get_requestgroup_id(self):
         return self.get_headers().get(settings.REQUESTGROUP_ID_KEY)
+    
+    def get_frame_basename(self):
+        return self.get_headers().get(settings.THUMBNAIL_FRAME_BASENAME_KEY)
+    
+    def get_size(self):
+        return self.get_headers().get(settings.THUMBNAIL_SIZE_KEY, '')

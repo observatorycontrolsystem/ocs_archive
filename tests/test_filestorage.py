@@ -9,6 +9,7 @@ from ocs_archive.storage.filestorefactory import FileStoreFactory
 from ocs_archive.storage.s3store import strip_quotes_from_etag, S3Store
 from ocs_archive.input.file import File
 from ocs_archive.input.lcofitsfile import LcoFitsFile
+from ocs_archive.input.thumbnailfile import ThumbnailFile
 
 
 FITS_PATH = os.path.join(
@@ -26,6 +27,10 @@ FITS_FILE = os.path.join(
 PDF_FILE = os.path.join(
     OTHER_PATH,
     'cptnrs03-fa13-20150219-0001-e92-summary.pdf'
+)
+JPG_FILE = os.path.join(
+    OTHER_PATH,
+    'tfn0m419-sq32-20240426-0097-e91-small.jpg'
 )
 
 
@@ -74,6 +79,14 @@ class TestS3Store(unittest.TestCase):
     def test_upload_file(self, s3_mock):
         with open(FITS_FILE, 'rb') as fileobj:
             data_file = LcoFitsFile(File(fileobj))
+            self.s3.store_file(data_file)
+        self.assertTrue(s3_mock.called)
+
+    @patch('boto3.resource', side_effect=mocked_s3_object)
+    def test_upload_jpg_file(self, s3_mock):
+        file_metadata = {'SITEID': 'tfn', 'INSTRUME': 'sq32', 'DATE-OBS': '2024-04-26T13:56:05.261', 'size': 'small', 'frame_basename': 'test', 'DAY-OBS': '20240426', 'TELID': '0m4a'}
+        with open(JPG_FILE, 'rb') as fileobj:
+            data_file = ThumbnailFile(File(fileobj), file_metadata)
             self.s3.store_file(data_file)
         self.assertTrue(s3_mock.called)
 

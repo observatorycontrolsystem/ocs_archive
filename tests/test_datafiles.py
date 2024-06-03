@@ -11,6 +11,7 @@ from ocs_archive.input.fitsfile import FitsFile
 from ocs_archive.input.filefactory import FileFactory
 from ocs_archive.input.lcofitsfile import LcoFitsFile
 from ocs_archive.input.tarwithfitsfile import TarWithFitsFile
+from ocs_archive.input.thumbnailfile import ThumbnailFile
 from ocs_archive.settings import settings
 
 
@@ -19,6 +20,10 @@ FITS_PATH = os.path.join(
     'test_files/fits/'
 )
 
+OTHER_PATH = os.path.join(
+    os.path.dirname(__file__),
+    'test_files/other/'
+)
 
 class TestDataFile(unittest.TestCase):
     def setUp(self):
@@ -243,6 +248,20 @@ class TestDataFile(unittest.TestCase):
         data_file = DataFile(self.file, file_metadata={'DATE-OBS': '2015-02-19T13:56:05.261'}, required_headers=[])
         self.assertEqual('', data_file.get_filestore_content_type())
 
+    def test_thumbnail_path_to_filestore_path(self):
+        headers = {'SITEID': 'cpt', 'INSTRUME': 'nres03', 'DATE-OBS': '2015-02-19T13:56:05.261', 'size': 'small', 'frame_basename': 'test', 'DAY-OBS': '20150219', 'TELID': '1m0a'}
+        jpg_file = EmptyFile('test.jpg')
+        thumbnail_file = ThumbnailFile(jpg_file, file_metadata=headers, required_headers=[])
+        self.assertEqual(
+            'cpt/nres03/20150219/thumbnails/test.jpg',
+            thumbnail_file.get_filestore_path()
+        )
+
+    def test_jpg_extension_to_content_type(self):
+        jpg_file = EmptyFile('test.jpg')
+        thumbnail_file = ThumbnailFile(jpg_file, file_metadata={'SITEID': 'cpt', 'INSTRUME': 'nres03', 'DATE-OBS': '2015-02-19T13:56:05.261', 'size': 'small', 'frame_basename': 'test', 'DAY-OBS': '20150219', 'TELID': '1m0a'}, required_headers=[])
+        self.assertEqual('image/jpg', thumbnail_file.get_filestore_content_type())
+
 
 class TestFits(unittest.TestCase):
     def setUp(self):
@@ -443,6 +462,37 @@ class TestTarFits(unittest.TestCase):
         header_data = data_file.get_header_data()
         self.assertIsNotNone(header_data.get_observation_date())
         self.assertIsNotNone(header_data.get_proposal_id())
+
+
+class TestThumbnail(unittest.TestCase):
+    def setUp(self):
+        self.fileobj = open(os.path.join(
+            OTHER_PATH,
+            'tfn0m419-sq32-20240426-0097-e91-small.jpg'), 'rb'
+        )
+        self.file = File(self.fileobj, 'tfn0m419-sq32-20240426-0097-e91-small.jpg')
+        self.metadata = {'SITEID': 'tfn', 'INSTRUME': 'sq32', 'DATE-OBS': '2024-04-26T13:56:05.261',
+                         'size': 'small', 'frame_basename': 'test', 'DAY-OBS': '20240426', 'TELID': '1m0a'}
+
+    def tearDown(self):
+        self.fileobj.close()
+
+    def test_thumbnail_to_filestore_path(self):
+        data_file = ThumbnailFile(self.file, file_metadata=self.metadata)
+        self.assertEqual(
+            'tfn/sq32/20240426/thumbnails/tfn0m419-sq32-20240426-0097-e91-small.jpg',
+            data_file.get_filestore_path()
+        )
+
+    def test_thumbnail_missing_metadata_raises_exception(self):
+        del self.metadata['size']
+        with self.assertRaises(FileSpecificationException):
+            ThumbnailFile(self.file, file_metadata={})
+
+    def test_thumbnail_normalizes_metadata(self):
+        data_file = ThumbnailFile(self.file, file_metadata=self.metadata)
+        header_data = data_file.get_header_data()
+        self.assertEqual(None, header_data.get_request_id())
 
 
 class TestFileFactory(unittest.TestCase):
