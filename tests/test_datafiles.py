@@ -255,7 +255,7 @@ class TestDataFile(unittest.TestCase):
         self.assertEqual(
             'cpt/nres03/20150219/thumbnails/test.jpg',
             thumbnail_file.get_filestore_path()
-        )        
+        )
 
     def test_jpg_extension_to_content_type(self):
         jpg_file = EmptyFile('test.jpg')
@@ -486,7 +486,7 @@ class TestThumbnail(unittest.TestCase):
 
     def test_thumbnail_missing_metadata_raises_exception(self):
         del self.metadata['size']
-        with self.assertRaises(FileSpecificationException) as fse:
+        with self.assertRaises(FileSpecificationException):
             ThumbnailFile(self.file, file_metadata={})
 
     def test_thumbnail_normalizes_metadata(self):

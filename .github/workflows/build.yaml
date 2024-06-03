@@ -34,6 +34,7 @@ jobs:
       uses: coverallsapp/github-action@v2
       with:
         parallel: true
+        file: .coverage
   finish:
     runs-on: ubuntu-latest
     needs: run_tests
