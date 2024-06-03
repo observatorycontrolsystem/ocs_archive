@@ -29,7 +29,9 @@ jobs:
         python -m pip install 'poetry'
         poetry install
     - name: Run tests
-      run: poetry run coverage run -m pytest
+      run: | 
+        poetry run coverage run -m pytest
+        poetry run coverage xml
     - name: Generate and send coveralls report
       uses: coverallsapp/github-action@v2
       with:
