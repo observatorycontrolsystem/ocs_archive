@@ -29,7 +29,7 @@ class ThumbnailFile(DataFile):
 
     def get_filestore_content_type(self):
         return f'image/{self.open_file.extension[1:]}'
-    
+
     def _is_valid_file_metadata(self, metadata_dict: dict):
         """
         Check some file metadata for required headers.
