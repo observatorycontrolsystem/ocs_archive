@@ -291,6 +291,13 @@ class TestFits(unittest.TestCase):
         self.assertEqual('fl03', header_data.get_instrument_id())
         self.assertIsNone(header_data.get_request_id())
 
+    def test_string_reduction_level_is_corrected(self):
+        headers = {'RLEVEL': '0'}
+        data_file = FitsFile(self.file, file_metadata=headers, required_headers=self.required_headers)
+        header_data = data_file.get_header_data()
+        self.assertEqual(0, header_data.get_reduction_level())
+        self.assertEqual('coj/kb05/20150219/raw/coj1m011-kb05-20150219-0125-e90.fits.fz', data_file.get_filestore_path())
+
     def test_remove_blacklist(self):
         headers = {
             'FOO': 'BAR',
@@ -366,13 +373,13 @@ class TestLcoFits(unittest.TestCase):
         header_data = data_file.get_header_data()
         self.assertEqual(91, header_data.get_reduction_level())
 
-    def test_rlevel_missing(self):
+    def test_rlevel_missing_scrapped_from_file_path(self):
         headers = {}
         data_file = LcoFitsFile(self.file, file_metadata=headers, required_headers=self.required_headers)
         header_data = data_file.get_header_data()
         self.assertEqual(90, header_data.get_reduction_level())
 
-    def test_reduction_level(self):
+    def test_reduction_level_from_file_path(self):
         headers = {}
         data_file = LcoFitsFile(self.file, file_metadata=headers, required_headers=self.required_headers)
         header_data = data_file.get_header_data()
@@ -389,6 +396,12 @@ class TestLcoFits(unittest.TestCase):
             data_file = LcoFitsFile(e10_file, file_metadata=headers, required_headers=self.required_headers)
             header_data = data_file.get_header_data()
             self.assertEqual(header_data.get_reduction_level(), 10)
+
+    def test_reduction_level_of_zero_not_scrapped_from_file_path(self):
+        headers = {'RLEVEL': 0}
+        data_file = LcoFitsFile(self.file, file_metadata=headers, required_headers=self.required_headers)
+        header_data = data_file.get_header_data()
+        self.assertEqual(0, header_data.get_reduction_level())
 
     def test_repair_obstype(self):
         tst_file = EmptyFile('tst1m005-en20-20150511-1234-e00.fits.fz')

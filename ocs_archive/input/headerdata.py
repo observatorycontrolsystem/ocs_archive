@@ -78,7 +78,7 @@ class HeaderData:
         return self.get_headers().get(settings.PUBLIC_DATE_KEY)
 
     def get_reduction_level(self):
-        return self.get_headers().get(settings.REDUCTION_LEVEL_KEY, 0)
+        return int(self.get_headers().get(settings.REDUCTION_LEVEL_KEY, 0))
 
     def get_instrument_id(self):
         return self.get_headers().get(settings.INSTRUMENT_ID_KEY, '')
