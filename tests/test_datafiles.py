@@ -12,6 +12,7 @@ from ocs_archive.input.filefactory import FileFactory
 from ocs_archive.input.lcofitsfile import LcoFitsFile
 from ocs_archive.input.tarwithfitsfile import TarWithFitsFile
 from ocs_archive.input.thumbnailfile import ThumbnailFile
+from ocs_archive.input.soarfitsfile import SOARFitsFile
 from ocs_archive.settings import settings
 
 
@@ -452,6 +453,34 @@ class TestLcoFits(unittest.TestCase):
             'coj/kb05/bpm/coj1m011-kb05-20150219-0125-bpm.fits.fz',
             data_file.get_filestore_path()
         )
+
+
+class TestSOARFits(unittest.TestCase):
+    def _make_datafile(self, filename, extra_headers=None):
+        headers = {'PROPID': 'TestProposal', 'DATE-OBS': '2015-02-19T13:56:05.261'}
+        if extra_headers:
+            headers.update(extra_headers)
+        return SOARFitsFile(EmptyFile(filename), file_metadata=headers, required_headers=[])
+
+    def test_cfzst_prefix_sets_reduction_level_62(self):
+        data_file = self._make_datafile('cfzst-something-20150219-0001-e00.fits')
+        self.assertEqual(62, data_file.get_header_data().get_reduction_level())
+
+    def test_ecfzst_prefix_sets_reduction_level_63(self):
+        data_file = self._make_datafile('ecfzst-something-20150219-0001-e00.fits')
+        self.assertEqual(63, data_file.get_header_data().get_reduction_level())
+
+    def test_wecfzst_prefix_sets_reduction_level_64(self):
+        data_file = self._make_datafile('wecfzst-something-20150219-0001-e00.fits')
+        self.assertEqual(64, data_file.get_header_data().get_reduction_level())
+
+    def test_prefix_overrides_incorrect_rlevel_header(self):
+        data_file = self._make_datafile('cfzst-something-20150219-0001-e00.fits', {'RLEVEL': 0})
+        self.assertEqual(62, data_file.get_header_data().get_reduction_level())
+
+    def test_no_prefix_keeps_existing_reduction_level(self):
+        data_file = self._make_datafile('something-20150219-0001-e91.fits', {'RLEVEL': 91})
+        self.assertEqual(91, data_file.get_header_data().get_reduction_level())
 
 
 class TestTarFits(unittest.TestCase):
