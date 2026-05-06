@@ -1,5 +1,5 @@
 from ocs_archive.input.fitsfile import FitsFile
-from ocs_archive.input.file import File, FileSpecificationException
+from ocs_archive.input.file import File
 from ocs_archive.settings import settings
 
 SOAR_PREFIX_TO_RLEVEL = {
