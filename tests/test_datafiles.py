@@ -12,6 +12,7 @@ from ocs_archive.input.filefactory import FileFactory
 from ocs_archive.input.lcofitsfile import LcoFitsFile
 from ocs_archive.input.tarwithfitsfile import TarWithFitsFile
 from ocs_archive.input.thumbnailfile import ThumbnailFile
+from ocs_archive.input.soarfitsfile import SOARFitsFile
 from ocs_archive.settings import settings
 
 
@@ -291,6 +292,13 @@ class TestFits(unittest.TestCase):
         self.assertEqual('fl03', header_data.get_instrument_id())
         self.assertIsNone(header_data.get_request_id())
 
+    def test_string_reduction_level_is_corrected(self):
+        headers = {'RLEVEL': '0'}
+        data_file = FitsFile(self.file, file_metadata=headers, required_headers=self.required_headers)
+        header_data = data_file.get_header_data()
+        self.assertEqual(0, header_data.get_reduction_level())
+        self.assertEqual('coj/kb05/20150219/raw/coj1m011-kb05-20150219-0125-e90.fits.fz', data_file.get_filestore_path())
+
     def test_remove_blacklist(self):
         headers = {
             'FOO': 'BAR',
@@ -366,13 +374,13 @@ class TestLcoFits(unittest.TestCase):
         header_data = data_file.get_header_data()
         self.assertEqual(91, header_data.get_reduction_level())
 
-    def test_rlevel_missing(self):
+    def test_rlevel_missing_scrapped_from_file_path(self):
         headers = {}
         data_file = LcoFitsFile(self.file, file_metadata=headers, required_headers=self.required_headers)
         header_data = data_file.get_header_data()
         self.assertEqual(90, header_data.get_reduction_level())
 
-    def test_reduction_level(self):
+    def test_reduction_level_from_file_path(self):
         headers = {}
         data_file = LcoFitsFile(self.file, file_metadata=headers, required_headers=self.required_headers)
         header_data = data_file.get_header_data()
@@ -389,6 +397,12 @@ class TestLcoFits(unittest.TestCase):
             data_file = LcoFitsFile(e10_file, file_metadata=headers, required_headers=self.required_headers)
             header_data = data_file.get_header_data()
             self.assertEqual(header_data.get_reduction_level(), 10)
+
+    def test_reduction_level_of_zero_not_scrapped_from_file_path(self):
+        headers = {'RLEVEL': 0}
+        data_file = LcoFitsFile(self.file, file_metadata=headers, required_headers=self.required_headers)
+        header_data = data_file.get_header_data()
+        self.assertEqual(0, header_data.get_reduction_level())
 
     def test_repair_obstype(self):
         tst_file = EmptyFile('tst1m005-en20-20150511-1234-e00.fits.fz')
@@ -439,6 +453,34 @@ class TestLcoFits(unittest.TestCase):
             'coj/kb05/bpm/coj1m011-kb05-20150219-0125-bpm.fits.fz',
             data_file.get_filestore_path()
         )
+
+
+class TestSOARFits(unittest.TestCase):
+    def _make_datafile(self, filename, extra_headers=None):
+        headers = {'PROPID': 'TestProposal', 'DATE-OBS': '2015-02-19T13:56:05.261'}
+        if extra_headers:
+            headers.update(extra_headers)
+        return SOARFitsFile(EmptyFile(filename), file_metadata=headers, required_headers=[])
+
+    def test_cfzst_prefix_sets_reduction_level_62(self):
+        data_file = self._make_datafile('cfzst-something-20150219-0001-e00.fits')
+        self.assertEqual(62, data_file.get_header_data().get_reduction_level())
+
+    def test_ecfzst_prefix_sets_reduction_level_63(self):
+        data_file = self._make_datafile('ecfzst-something-20150219-0001-e00.fits')
+        self.assertEqual(63, data_file.get_header_data().get_reduction_level())
+
+    def test_wecfzst_prefix_sets_reduction_level_64(self):
+        data_file = self._make_datafile('wecfzst-something-20150219-0001-e00.fits')
+        self.assertEqual(64, data_file.get_header_data().get_reduction_level())
+
+    def test_prefix_overrides_incorrect_rlevel_header(self):
+        data_file = self._make_datafile('cfzst-something-20150219-0001-e00.fits', {'RLEVEL': 0})
+        self.assertEqual(62, data_file.get_header_data().get_reduction_level())
+
+    def test_no_prefix_keeps_existing_reduction_level(self):
+        data_file = self._make_datafile('something-20150219-0001-e91.fits', {'RLEVEL': 91})
+        self.assertEqual(91, data_file.get_header_data().get_reduction_level())
 
 
 class TestTarFits(unittest.TestCase):

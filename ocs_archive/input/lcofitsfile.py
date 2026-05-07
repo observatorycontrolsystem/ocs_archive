@@ -73,8 +73,8 @@ class LcoFitsFile(FitsFile):
                 raise FileSpecificationException(f'{settings.CONFIGURATION_TYPE_KEY} is UNKNOWN and could not be inferred. Please manually correct it')
 
     def _repair_reduction_level(self):
-        reduction_level = self.header_data.get_reduction_level()
-        if not reduction_level:
+        # If the reduction level is not set in the header, then try to scrape it from the file name
+        if not self.header_data.headers_are_set([settings.REDUCTION_LEVEL_KEY]):
             # TODO: Pipeline should write this value instead of
             # being inferred from the filename
             MAX_REDUCTION = 90
